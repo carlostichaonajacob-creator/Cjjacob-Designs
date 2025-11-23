@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="CJJacob">
+  <meta name="keywords" content="web designer, web developer, portfolio, Cape Town">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://cjjacob.com">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="CJJacob - Design Studio">
+  <meta property="og:description" content="I design & build websites that feel as good as they look. Clean visuals, smooth interactions, and websites that help your business grow.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://cjjacob.com">
+  <meta property="og:image" content="https://cjjacob.com/og-image.jpg">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CJJacob - Design Studio">
+  <meta name="twitter:description" content="I design & build websites that feel as good as they look.">
+  <meta name="twitter:image" content="https://cjjacob.com/og-image.jpg">
+  
+  <title>CJJacob - Design Studio</title>
+  
+  <!-- Preconnect for Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://images.unsplash.com">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
+
+  <link rel="stylesheet" href="assets/css/styles.css">
+  
+</head>
+<body>
+  <!-- Skip Link for Accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Custom Cursor -->
+  <div class="custom-cursor" id="customCursor">
+    <span>View</span>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- NAVIGATION -->
+  <!-- ============================================ -->
+  <header>
+    <nav class="navbar" aria-label="Main navigation">
+      <div class="navbar-inner">
+        <a href="#home" class="logo">CJJACOB</a>
+        <button class="hamburger" aria-label="Toggle navigation menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <ul class="nav-links desktop-nav">
+          <li><a href="#about">About</a></li>
+          <li><a href="#work">Work</a></li>
+          <li><a href="#process">Process</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#contact" class="cta-btn">Start Project</a></li>
+        </ul>
+      </div>
+      <div class="mobile-menu-overlay">
+        <ul class="nav-links mobile-nav">
+          <li><a href="#about">About</a></li>
+          <li><a href="#work">Work</a></li>
+          <li><a href="#process">Process</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#contact" class="cta-btn">Start Project</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <!-- ============================================ -->
+    <!-- HERO SECTION -->
+    <!-- ============================================ -->
+    <section id="home" class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h1 class="hero-title">I design & build websites that feel as good as they look.</h1>
+          <p class="subtext">A one-person design & development studio focused on clean visuals, smooth interactions, and websites that help your business grow.</p>
+          <div class="hero-ctas">
+            <a href="#work" class="btn-primary">See My Work</a>
+            <a href="#contact" class="btn-secondary">Start a Project</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- ============================================ -->
+    <!-- ABOUT SECTION -->
+    <!-- ============================================ -->
+    <section id="about" class="about">
+      <div class="about__container">
+        <h2 class="about__title">A designer who codes. A developer who cares about design.</h2>
+        <div class="about__content">
+          <div class="about__image-wrapper">
+            <div class="about__image" role="img" aria-label="CJJacob profile photo - web designer and developer at work"></div>
+          </div>
+          <div class="about__body">
+            <p class="about__text">I help brands turn complicated ideas into simple, beautiful, high-performing websites. No bloated team. No handoff chaos. No generic templates.</p>
+            <p class="about__text">Just a clear process, thoughtful design, and high-quality development — handled end-to-end by one person who actually listens.</p>
+            <p class="about__text">My approach is simple: Make the entire experience easy, enjoyable, and genuinely exciting. If you want a site that feels clean, fast, and true to your brand… you're in the right place.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- ============================================ -->
+    <!-- WORK SECTION -->
+    <!-- ============================================ -->
+    <section id="work" class="work-section">
+      <div class="work-container">
+        <div class="work-header">
+          <h2 class="work-header__title">Featured Work</h2>
+          <p class="work-header__subtitle">A curated selection of my recent projects — each focused on clarity, identity, and performance.</p>
+        </div>
+        <div class="works-grid">
+          <!-- Project 1 - Nova Studio -->
+          <a href="https://easingmind.vercel.app/" target="_blank" rel="noopener noreferrer" class="work-card-link" data-cursor="true">
+            <div class="work-card">
+              <div class="background-box gradient-1">
+                <div class="browser-window">
+                  <div class="browser-chrome">
+                    <div class="window-controls">
+                      <div class="control-btn close"></div>
+                      <div class="control-btn minimize"></div>
+                      <div class="control-btn maximize"></div>
+                    </div>
+                    <div class="nav-arrows">
+                      <div class="arrow-btn">‹</div>
+                      <div class="arrow-btn">›</div>
+                    </div>
+                    <div class="url-bar">
+                      <span class="lock-icon">🔒</span>
+                      <span class="url-text">novastudio.com</span>
+                    </div>
+                    <div class="browser-actions">
+                      <div class="action-btn">⋯</div>
+                      <div class="action-btn">+</div>
+                      <div class="action-btn">⎘</div>
+                    </div>
+                  </div>
+                  <div class="browser-viewport">
+                    <img src="assets/images/easing mind wallpaer home section.png" alt="Nova Studio website screenshot showing modern redesign with cinematic motion and clean composition" loading="lazy">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="project-info-overlay">
+                <h3 class="project-title">Easing mind</h3>
+                <p class="project-description">Modern redesign with cinematic motion and clean composition.</p>
+                <div class="project-tags">
+                  <span class="tag">DESIGN</span>
+                  <span class="tag">DEVELOPMENT</span>
+                  <span class="tag">2025</span>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Project 2 - ArcBright Consulting -->
+          <a href="https://health-care-plus-medical-9mzx.vercel.app/" target="_blank" rel="noopener noreferrer" class="work-card-link" data-cursor="true">
+            <div class="work-card">
+              <div class="background-box gradient-2">
+                <div class="browser-window">
+                  <div class="browser-chrome">
+                    <div class="window-controls">
+                      <div class="control-btn close"></div>
+                      <div class="control-btn minimize"></div>
+                      <div class="control-btn maximize"></div>
+                    </div>
+                    <div class="nav-arrows">
+                      <div class="arrow-btn">‹</div>
+                      <div class="arrow-btn">›</div>
+                    </div>
+                    <div class="url-bar">
+                      <span class="lock-icon">🔒</span>
+                      <span class="url-text">arcbright.com</span>
+                    </div>
+                    <div class="browser-actions">
+                      <div class="action-btn">⋯</div>
+                      <div class="action-btn">+</div>
+                      <div class="action-btn">⎘</div>
+                    </div>
+                  </div>
+                  <div class="browser-viewport">
+                    <img src="assets/images/health care .png" alt="ArcBright Consulting website screenshot displaying professional, minimal experience with subtle depth" loading="lazy">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="project-info-overlay">
+                <h3 class="project-title">Health Care Plus</h3>
+                <p class="project-description">A professional, minimal experience with subtle depth and interaction.</p>
+                <div class="project-tags">
+                  <span class="tag">DESIGN</span>
+                  <span class="tag">DEVELOPMENT</span>
+                  <span class="tag">2025</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- PROCESS SECTION -->
+    <!-- ============================================ -->
+    <section id="process" class="process">
+      <!-- DESKTOP PROCESS -->
+      <div class="process__sticky-wrapper">
+        <div class="process__content" id="processContent">
+          <div class="process__header">
+            <h2 class="process__title">How I Work</h2>
+            <p class="process__subtitle">A simple, transparent workflow designed to keep things collaborative, predictable, and stress-free.</p>
+          </div>
+          <div class="process__steps-container">
+            <div class="process__step active">
+              <div class="process__step-number">Step 01</div>
+              <h3 class="process__step-title">Discovery & Research</h3>
+              <p class="process__step-text">We start with clarity — your goals, audience, challenges, and what "success" actually means. This phase gives the project a strategic core.</p>
+            </div>
+            <div class="process__step">
+              <div class="process__step-number">Step 02</div>
+              <h3 class="process__step-title">Strategy & Planning</h3>
+              <p class="process__step-text">We map out user flows, content structure, page hierarchy, and everything needed before design. It turns vision into a clear, actionable blueprint.</p>
+            </div>
+            <div class="process__step">
+              <div class="process__step-number">Step 03</div>
+              <h3 class="process__step-title">Design & Prototyping</h3>
+              <p class="process__step-text">This is where your brand becomes an experience. Clean layouts, intentional typography, and interactive prototypes that show you exactly what the site will look and feel like.</p>
+            </div>
+            <div class="process__step">
+              <div class="process__step-number">Step 04</div>
+              <h3 class="process__step-title">Development & Testing</h3>
+              <p class="process__step-text">I build your site using clean, modern code — fast, responsive, and SEO-friendly. Every interaction is tested across devices for a flawless experience.</p>
+            </div>
+            <div class="process__step">
+              <div class="process__step-number">Step 05</div>
+              <h3 class="process__step-title">Launch & Optimization</h3>
+              <p class="process__step-text">Your site goes live, but my support doesn't stop. I help monitor performance, refine details, and keep the experience running smoothly.</p>
+            </div>
+          </div>
+          <div class="process__progress" role="tablist" aria-label="Process steps navigation">
+            <button class="process__dot active" role="tab" aria-label="Go to step 1" aria-selected="true"></button>
+            <button class="process__dot" role="tab" aria-label="Go to step 2" aria-selected="false"></button>
+            <button class="process__dot" role="tab" aria-label="Go to step 3" aria-selected="false"></button>
+            <button class="process__dot" role="tab" aria-label="Go to step 4" aria-selected="false"></button>
+            <button class="process__dot" role="tab" aria-label="Go to step 5" aria-selected="false"></button>
+          </div>
+        </div>
+        <div class="process__spacer"></div>
+      </div>
+
+      <!-- MOBILE PROCESS CAROUSEL -->
+      <div class="process-mobile">
+        <div class="process-mobile-container">
+          <!-- Section Title -->
+          <div class="mobile-section-title">
+            <h2>How I Work</h2>
+            <p>A simple, transparent workflow designed to keep things collaborative, predictable, and stress-free.</p>
+          </div>
+
+          <!-- Cards Viewport -->
+          <div class="mobile-cards-viewport">
+            <div class="mobile-cards-container" id="mobileCardsContainer"></div>
+          </div>
+
+          <!-- Navigation Controls -->
+          <div class="mobile-nav-controls">
+            <button class="mobile-nav-arrow" id="mobilePrevBtn" aria-label="Previous step">
+              <svg viewBox="0 0 24 24">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+            </button>
+
+            <div class="mobile-progress-dots" id="mobileProgressDots"></div>
+
+            <button class="mobile-nav-arrow" id="mobileNextBtn" aria-label="Next step">
+              <svg viewBox="0 0 24 24">
+                <path d="M9 18l6-6-6-6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- CONTACT SECTION -->
+    <!-- ============================================ -->
+    <section id="contact">
+      <div class="container">
+        <div class="contact-grid">
+          <div class="contact-content">
+            <h2>Let's Build Something You'll Be Proud Of</h2>
+            <p class="contact-subtitle">Tell me a bit about your project — I'll get back to you within 24 hours.</p>
+          </div>
+          <div class="contact-form-wrapper">
+            <form class="contact-form" id="contactForm"
+            action="https://formspree.io/f/mqajnwwr" method="post">
+              <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" autocomplete="name" required>
+              </div>
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" autocomplete="email" required>
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" autocomplete="tel">
+              </div>
+                <!--
+              <div class="form-group">
+                <label for="projectType">Project Type</label>
+                <select id="projectType" name="projectType" required>
+                  <option value="">Select a type</option>
+                  <option value="website">Website</option>
+                  <option value="redesign">Redesign</option>
+                  <option value="landing-page">Landing Page</option>
+                  <option value="other">Other</option>
+                </select>
+              </div> -->
+              <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" required></textarea>
+              </div>
+              <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================ -->
+  <!-- FOOTER -->
+  <!-- ============================================ -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-left">
+          <div class="footer-logo">CJJacob</div>
+          <p class="footer-tagline">Crafted Websites. Built With Intention. Designed for Results.</p>
+        </div>
+        <div class="footer-right">
+          <nav class="footer-nav" aria-label="Footer navigation">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#work">Work</a>
+            <a href="#process">Process</a>
+            <a href="#contact">Contact</a>
+          </nav>
+          <div class="footer-contact">
+            <a href="mailto:cjjacobdesigns@gmail.com" class="footer-contact-item">
+              <i class="fas fa-envelope" aria-hidden="true"></i>
+              <span>cjjacobdesigns@gmail.com</span>
+            </a>
+            <a href="tel:+27752633429" class="footer-contact-item">
+              <i class="fas fa-phone" aria-hidden="true"></i>
+              <span>+27 75 263 3429</span>
+            </a>
+            <a href="https://wa.me/27752633429" class="footer-contact-item" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-whatsapp" aria-hidden="true"></i>
+              <span>WhatsApp</span>
+            </a>
+          </div>
+          <div class="footer-socials">
+            <a href="https://linkedin.com/in/cjjacob" class="social-icon" aria-label="LinkedIn profile" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+            </a>
+            <a href="https://wa.me/27752633429" class="social-icon" aria-label="Contact on WhatsApp" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-whatsapp" aria-hidden="true"></i>
+            </a>
+            <a href="https://instagram.com/carlostashingajacob" class="social-icon" aria-label="Instagram profile" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-instagram" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+  <p>© 2025 CJJacob Designs. All rights reserved. Crafted with intention.</p>
+  <div class="footer-legal">
+    <a href="privacy.html">Privacy Policy</a>
+    <span>•</span>
+    <a href="terms.html">Terms of Service</a>
+  </div>
+</div>
+  </footer>
+</body>
+
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "CJJacob Design Studio",
+    "description": "A one-person design & development studio focused on clean visuals, smooth interactions, and websites that help your business grow.",
+    "url": "https://cjjacob.com",
+    "email": "cjjacobdesigns@gmail.com",
+    "telephone": "+27752633429",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "ZA"
+    },
+    "sameAs": [
+      "https://linkedin.com/in/cjjacob",
+      "https://instagram.com/cjjacob"
+    ]
+  }
+  </script>
+
+  <script src="assets/js/script.js" defer></script>
+</body>
+</html>
