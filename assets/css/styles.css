@@ -118,75 +118,6 @@ h1, h2, h3 {
   transition: color 0.4s;
 }
 
-
-/* ============================================ */
-/* TEXT REVEAL ANIMATION */
-/* ============================================ */
-.text-reveal-wrapper {
-  overflow: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-.text-reveal {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.text-reveal .char {
-  display: inline-block;
-  transform: translateY(-100%);
-  opacity: 0;
-  animation: slideDownChar 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
-}
-
-.text-reveal .space {
-  width: 0.3em;
-}
-
-@keyframes slideDownChar {
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-
-/* ============================================ */
-/* TEXT SPLIT LINE ANIMATION - NEW */
-/* ============================================ */
-.split-text-line {
-  display: block;
-  overflow: hidden;
-  position: relative;
-  margin: 0.1em 0;
-}
-
-.split-text-line-inner {
-  display: block;
-  transform: translateY(110%);
-  opacity: 0;
-  will-change: transform, opacity;
-}
-
-/* Ensure parent elements allow overflow */
-.subtext,
-.about__text,
-.work-header__subtitle,
-.process__subtitle,
-.contact-subtitle {
-  overflow: visible !important;
-}
-
-/* Reduce motion for accessibility */
-@media (prefers-reduced-motion: reduce) {
-  .text-reveal .char {
-    animation: none !important;
-    transform: none !important;
-    opacity: 1 !important;
-  }
-}
-
 body.dark-mode h1,
 body.dark-mode h2,
 body.dark-mode h3 {
@@ -543,12 +474,12 @@ body.dark-mode .mobile-nav a {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 100px 0;
-  text-align: start;
+  padding: 200px 0;
+  text-align: center;
 }
 
 .hero-content {
-  max-width: 1300px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -845,6 +776,7 @@ button:focus-visible {
   margin-bottom: 60px;
   opacity: 0;
   transform: translateY(20px);
+  text-align: start;
 }
 
 body.dark-mode .about__title {
@@ -871,6 +803,7 @@ body.dark-mode .about__title {
   font-size: 18px;
   color: var(--dark-grey);
   margin-bottom: 32px;
+  text-align: start;
 }
 
 body.dark-mode .about__text {
@@ -1580,6 +1513,7 @@ body.dark-mode .tag {
   color: #666;
   max-width: 540px;
   margin: 0 auto;
+  text-align: start;
 }
 
 body.dark-mode .process__subtitle {
