@@ -1,7 +1,168 @@
 
     // ============================================
-// GSAP SETUP
+// GSAP SETUP new upadated code
 // ============================================
+
+
+
+// ============================================
+// TEXT REVEAL ANIMATION
+// ============================================
+function splitTextToChars(element) {
+  const text = element.getAttribute('data-text');
+  const baseDelay = parseFloat(element.getAttribute('data-delay')) || 0;
+  
+  // Store original text as backup
+  if (!element.dataset.originalText) {
+    element.dataset.originalText = element.textContent;
+  }
+  
+  element.innerHTML = '';
+  
+  text.split('').forEach((char, index) => {
+    const span = document.createElement('span');
+    span.classList.add('char');
+    
+    if (char === ' ') {
+      span.classList.add('space');
+      span.innerHTML = '&nbsp;';
+    } else {
+      span.textContent = char;
+    }
+    
+    // Dynamic character delay based on parent element
+    // About section gets slower reveal (0.05s), others use default (0.03s)
+    const isAboutSection = element.closest('.about') !== null;
+    const delayMultiplier = isAboutSection ? 0.05 : 0.03;
+    const charDelay = baseDelay + (index * delayMultiplier);
+    span.style.animationDelay = `${charDelay}s`;
+    element.appendChild(span);
+  });
+}
+
+
+// ============================================
+// TEXT SPLIT LINE ANIMATION - NEW
+// ============================================
+/**
+ * Splits text into animated lines (for paragraphs/subtitles)
+ * @param {HTMLElement} element - The element to split
+ */
+function splitTextToLines(element) {
+  if (!element || element.dataset.splitProcessed) return;
+  
+  const text = element.textContent.trim();
+  if (!text) return;
+  
+  // Store original text
+  element.dataset.originalText = text;
+  element.innerHTML = '';
+  
+  // Create measuring element
+  const styles = window.getComputedStyle(element);
+  const measuringEl = document.createElement('div');
+  measuringEl.style.cssText = `
+    position: absolute;
+    visibility: hidden;
+    width: ${element.offsetWidth}px;
+    font-size: ${styles.fontSize};
+    font-family: ${styles.fontFamily};
+    font-weight: ${styles.fontWeight};
+    line-height: ${styles.lineHeight};
+    letter-spacing: ${styles.letterSpacing};
+    text-align: ${styles.textAlign};
+    white-space: normal;
+    word-wrap: break-word;
+  `;
+  document.body.appendChild(measuringEl);
+  
+  // Split into lines
+  const words = text.split(/\s+/).filter(w => w.length > 0);
+  const lines = [];
+  let currentLine = [];
+  let lastTop = null;
+  
+  words.forEach((word, index) => {
+    const span = document.createElement('span');
+    span.textContent = word + ' ';
+    span.style.display = 'inline';
+    measuringEl.appendChild(span);
+    
+    const rect = span.getBoundingClientRect();
+    const currentTop = rect.top;
+    
+    if (lastTop !== null && currentTop > lastTop) {
+      lines.push(currentLine.join(' '));
+      currentLine = [word];
+    } else {
+      currentLine.push(word);
+    }
+    
+    lastTop = currentTop;
+    
+    if (index === words.length - 1) {
+      lines.push(currentLine.join(' '));
+    }
+  });
+  
+  document.body.removeChild(measuringEl);
+  
+  // Create line elements
+  const fragment = document.createDocumentFragment();
+  lines.forEach(lineText => {
+    const lineWrapper = document.createElement('div');
+    lineWrapper.className = 'split-text-line';
+    
+    const lineInner = document.createElement('div');
+    lineInner.className = 'split-text-line-inner';
+    lineInner.textContent = lineText;
+    
+    lineWrapper.appendChild(lineInner);
+    fragment.appendChild(lineWrapper);
+  });
+  
+  element.appendChild(fragment);
+  element.dataset.splitProcessed = 'true';
+}
+
+/**
+ * Animates split text lines with stagger
+ * @param {NodeList} lines - The line elements to animate
+ * @param {Object} trigger - The trigger element or selector
+ * @param {Number} startDelay - Initial delay before animation starts
+ */
+/**
+ * Animates split text lines with stagger
+ * @param {NodeList} lines - The line elements to animate
+ * @param {Object} trigger - The trigger element or selector
+ * @param {Number} startDelay - Initial delay before animation starts
+ * @param {Number} duration - Duration of each line animation (default: 0.8s)
+ * @param {Number} stagger - Delay between each line (default: 0.15s)
+ * @param {String} ease - Easing function (default: 'power3.out')
+ */
+function animateSplitLines(lines, trigger, startDelay = 0, duration = 0.8, stagger = 0.15, ease = 'power3.out') {
+  if (!lines || lines.length === 0) return;
+  
+  lines.forEach((line, index) => {
+    const lineInner = line.querySelector('.split-text-line-inner');
+    if (!lineInner) return;
+    
+    gsap.to(lineInner, {
+      y: 0,
+      opacity: 1,
+      duration: duration,
+      delay: startDelay + (index * stagger),
+      ease: ease,
+      scrollTrigger: {
+        trigger: trigger,
+        start: 'top 75%',
+        toggleActions: 'play none none none'
+      }
+    });
+  });
+}
+
+
 document.addEventListener('DOMContentLoaded', function() {
   gsap.registerPlugin(ScrollTrigger);
 
@@ -56,40 +217,120 @@ document.addEventListener('DOMContentLoaded', function() {
   // ============================================
   // PAGE LOAD ANIMATIONS
   // ============================================
+// ============================================
+  // PAGE LOAD ANIMATIONS - SEQUENTIAL REVEAL
+  // ============================================
   const loadTimeline = gsap.timeline({ delay: 0.4 });
 
   loadTimeline
+    // STEP 1: Logo appears elegantly (0.4s delay + 0.8s duration = completes at 1.2s)
     .to('.logo', {
       opacity: 1,
-      duration: 0.7,
-      ease: 'power3.out'
+      duration: 0.8,
+      ease: 'power2.out'
     })
+    // STEP 2: Nav links fade in sequentially (starts at 1.2s, completes ~2.0s)
     .to('.nav-links a', {
       opacity: 0.7,
-      duration: 0.5,
-      stagger: 0.08,
+      duration: 0.6,
+      stagger: 0.1, // Each link staggers by 0.1s
+      ease: 'power2.out',
       onComplete: () => {
         document.querySelectorAll('.nav-links a').forEach(a => a.classList.add('loaded'));
       }
-    }, '-=0.3')
+    }, '+=0.0') // Start immediately after logo
+    // STEP 3: Hero title container fades in (starts at 2.0s)
     .to('.hero-title', {
       opacity: 1,
       y: 0,
-      duration: 0.7,
-      ease: 'power3.out'
-    }, '-=0.2')
+      duration: 0.6,
+      ease: 'power2.out'
+    }, '+=0.0') // Start immediately after nav
+    // STEP 4: Hero subtext container fades in (starts when title is 60% done = at 2.36s)
+    // The line-by-line animation will be triggered separately below
     .to('.subtext', {
       opacity: 1,
       y: 0,
-      duration: 0.7,
-      ease: 'power3.out'
-    }, '-=0.5')
+      duration: 0.5,
+      ease: 'power2.out'
+    }, '-=0.24') // Start at 60% of previous animation (0.6s * 0.4 = 0.24s remaining)
+    // STEP 5: CTA buttons pop in confidently (after subtext container fades)
     .to('.hero-ctas', {
       opacity: 1,
       y: 0,
-      duration: 0.7,
-      ease: 'power3.out'
-    }, '-=0.5');
+      duration: 0.8,
+      ease: 'power2.out'
+    }, '+=0.3'); // Add 0.3s gap for breathing room
+
+
+// ============================================
+  // TEXT REVEAL ANIMATIONS - HERO
+  // ============================================
+  const heroTitle = document.querySelector('.hero-title.text-reveal');
+  if (heroTitle) {
+    splitTextToChars(heroTitle);
+    // Character animation happens via CSS, triggered after container fades in
+  }
+
+  // ============================================
+  // TEXT SPLIT LINE ANIMATIONS - Initialize all elements
+  // ============================================
+  
+  // Hero subtext - dramatic line-by-line reveal
+  const subtext = document.querySelector('.subtext[data-split-text="true"]');
+  if (subtext) {
+    document.fonts.ready.then(() => {
+      splitTextToLines(subtext);
+      const subtextLines = subtext.querySelectorAll('.split-text-line');
+      // Start at 2.8s (after title starts + 60% complete)
+      // Duration: 1.0s per line, Stagger: 0.25s between lines
+      // This creates a "painting" effect
+      animateSplitLines(subtextLines, '.hero', 2.8, 1.0, 0.25, 'power2.out');
+    });
+  }
+  
+// About paragraphs - SLOW & DRAMATIC
+  const aboutTexts = document.querySelectorAll('.about__text[data-split-text="true"]');
+  if (aboutTexts.length > 0) {
+    document.fonts.ready.then(() => {
+      aboutTexts.forEach((text, index) => {
+        splitTextToLines(text);
+        const lines = text.querySelectorAll('.split-text-line');
+        // SLOW TIMING: 1.4s duration per line, 0.35s stagger between lines
+        // Each paragraph starts 0.5s after previous completes
+        // This creates a "being written" effect that's impossible to miss
+        const paragraphDelay = 0.5 + (index * 0.8); // Stagger paragraphs significantly
+        animateSplitLines(lines, '.about', paragraphDelay, 1.4, 0.35, 'power2.out');
+      });
+    });
+  }
+  
+// Dynamic character delay based on parent element
+    // About section gets slower reveal (0.05s), others use default (0.03s)
+
+  
+// Process subtitle - clear and methodical
+  const processSubtitle = document.querySelector('.process__subtitle[data-split-text="true"]');
+  if (processSubtitle) {
+    document.fonts.ready.then(() => {
+      splitTextToLines(processSubtitle);
+      const lines = processSubtitle.querySelectorAll('.split-text-line');
+      // 1.0s duration, 0.25s stagger - professional reveal
+      animateSplitLines(lines, '.process', 0.2, 1.0, 0.25, 'power2.out');
+    });
+  }
+  
+// Contact subtitle - warm and inviting
+  const contactSubtitle = document.querySelector('.contact-subtitle[data-split-text="true"]');
+  if (contactSubtitle) {
+    document.fonts.ready.then(() => {
+      splitTextToLines(contactSubtitle);
+      const lines = contactSubtitle.querySelectorAll('.split-text-line');
+      // 1.2s duration, 0.3s stagger - slow, welcoming reveal
+      animateSplitLines(lines, '#contact', 0.2, 1.2, 0.3, 'power2.out');
+    });
+  }
+
 
   // ============================================
   // DARK MODE TRIGGERS - CONSOLIDATED
@@ -131,11 +372,18 @@ document.addEventListener('DOMContentLoaded', function() {
   const aboutTitle = document.querySelector('.about__title');
   const aboutContent = document.querySelector('.about__content');
   
-  if (aboutTitle) {
+if (aboutTitle) {
     gsap.to('.about__title', {
       scrollTrigger: {
         trigger: '.about',
-        start: 'top 70%'
+        start: 'top 70%',
+        onEnter: () => {
+          const aboutTitleReveal = document.querySelector('.about__title.text-reveal');
+          if (aboutTitleReveal && !aboutTitleReveal.dataset.animated) {
+            splitTextToChars(aboutTitleReveal);
+            aboutTitleReveal.dataset.animated = 'true';
+          }
+        }
       },
       opacity: 1,
       y: 0,
@@ -158,20 +406,27 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  const workHeader = document.querySelector('.work-header');
+const workHeader = document.querySelector('.work-header');
   if (workHeader) {
     gsap.to('.work-header', {
       scrollTrigger: {
         trigger: '.work-section',
-        start: 'top 70%'
+        start: 'top 70%',
+        onEnter: () => {
+          const workTitleReveal = document.querySelector('.work-header__title.text-reveal');
+          if (workTitleReveal && !workTitleReveal.dataset.animated) {
+            splitTextToChars(workTitleReveal);
+            workTitleReveal.dataset.animated = 'true';
+          }
+        }
       },
       opacity: 1,
-      duration: 0.8,
-      ease: 'power3.out'
+      duration: 1.0, // INCREASED for impact
+      ease: 'power2.out'
     });
   }
 
-  gsap.utils.toArray('.work-card').forEach((item, i) => {
+gsap.utils.toArray('.work-card').forEach((item, i) => {
     gsap.to(item, {
       scrollTrigger: {
         trigger: item,
@@ -180,23 +435,33 @@ document.addEventListener('DOMContentLoaded', function() {
       opacity: 1,
       y: 0,
       duration: 0.8,
-      delay: i * 0.1,
-      ease: 'power3.out'
+      delay: 0.3 + (i * 0.1), // ADD 0.3s initial delay before cards start
+      ease: 'power2.out'
     });
   });
 
-  const processHeader = document.querySelector('.process__header');
+const processHeader = document.querySelector('.process__header');
   if (processHeader) {
     gsap.to('.process__header', {
       scrollTrigger: {
         trigger: '.process',
-        start: 'top 60%'
+        start: 'top 60%',
+        onEnter: () => {
+          const processTitles = document.querySelectorAll('.process__title.text-reveal');
+          processTitles.forEach(title => {
+            if (!title.dataset.animated) {
+              splitTextToChars(title);
+              title.dataset.animated = 'true';
+            }
+          });
+        }
       },
       opacity: 1,
-      duration: 0.7,
-      ease: 'power3.out'
+      duration: 1.0, // INCREASED
+      ease: 'power2.out'
     });
   }
+
 
   // ============================================
   // PROCESS STEP ANIMATION (DESKTOP)
@@ -497,17 +762,25 @@ document.addEventListener('DOMContentLoaded', function() {
   const contactFormWrapper = document.querySelector('.contact-form-wrapper');
   const footer = document.querySelector('footer');
 
-  if (contactContent) {
+if (contactContent) {
     gsap.to('.contact-content', {
       scrollTrigger: {
         trigger: '#contact',
-        start: 'top 70%'
+        start: 'top 70%',
+        onEnter: () => {
+          const contactTitle = document.querySelector('#contact .text-reveal');
+          if (contactTitle && !contactTitle.dataset.animated) {
+            splitTextToChars(contactTitle);
+            contactTitle.dataset.animated = 'true';
+          }
+        }
       },
       opacity: 1,
-      duration: 1,
-      ease: 'power3.out'
+      duration: 1.2, // INCREASED for warmth
+      ease: 'power2.out'
     });
   }
+
 
   if (contactFormWrapper) {
     gsap.to('.contact-form-wrapper', {
@@ -813,6 +1086,17 @@ if (form) {
       }
     });
   });
+
+
+  // Reinitialize split text on resize
+      document.querySelectorAll('[data-split-text="true"]').forEach(el => {
+        if (el.dataset.splitProcessed) {
+          const originalText = el.dataset.originalText;
+          el.innerHTML = originalText;
+          el.dataset.splitProcessed = '';
+          splitTextToLines(el);
+        }
+      });
 
   // ============================================
   // SCROLL TRIGGER REFRESH ON RESIZE
