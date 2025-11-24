@@ -776,7 +776,6 @@ button:focus-visible {
   margin-bottom: 60px;
   opacity: 0;
   transform: translateY(20px);
-  text-align: start;
 }
 
 body.dark-mode .about__title {
@@ -803,7 +802,6 @@ body.dark-mode .about__title {
   font-size: 18px;
   color: var(--dark-grey);
   margin-bottom: 32px;
-  text-align: start;
 }
 
 body.dark-mode .about__text {
@@ -1513,7 +1511,6 @@ body.dark-mode .tag {
   color: #666;
   max-width: 540px;
   margin: 0 auto;
-  text-align: start;
 }
 
 body.dark-mode .process__subtitle {
