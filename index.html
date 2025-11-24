@@ -7,6 +7,10 @@
   <meta name="keywords" content="web designer, web developer, portfolio, Cape Town">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://cjjacob.com">
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon.png">
   
   <!-- Open Graph -->
   <meta property="og:title" content="CJJacob - Design Studio">
@@ -85,8 +89,13 @@
     <section id="home" class="hero">
       <div class="container">
         <div class="hero-content">
-          <h1 class="hero-title">I design & build websites that feel as good as they look.</h1>
-          <p class="subtext">A one-person design & development studio focused on clean visuals, smooth interactions, and websites that help your business grow.</p>
+          <div  class="text-reveal-wrapper">
+            <h1 class="hero-title text-reveal" data-text="I build custome website that feel as good as they look"></h1>
+          </div>
+          <div class="text-reveal-wrapper">
+            <p class="subtext" data-split-text="true">A one-person design & development studio focused on clean visuals, smooth interactions, and websites that help your business grow</p>
+          </div>
+          </div>
           <div class="hero-ctas">
             <a href="#work" class="btn-primary">See My Work</a>
             <a href="#contact" class="btn-secondary">Start a Project</a>
@@ -100,15 +109,17 @@
     <!-- ============================================ -->
     <section id="about" class="about">
       <div class="about__container">
-        <h2 class="about__title">A designer who codes. A developer who cares about design.</h2>
+        <div class="text-reveal-wrapper">
+          <h2 class="about__title text-reveal" data-text="A designer who codes. A developer who cares about design."></h2>
+        </div>
         <div class="about__content">
           <div class="about__image-wrapper">
             <div class="about__image" role="img" aria-label="CJJacob profile photo - web designer and developer at work"></div>
           </div>
           <div class="about__body">
-            <p class="about__text">I help brands turn complicated ideas into simple, beautiful, high-performing websites. No bloated team. No handoff chaos. No generic templates.</p>
-            <p class="about__text">Just a clear process, thoughtful design, and high-quality development — handled end-to-end by one person who actually listens.</p>
-            <p class="about__text">My approach is simple: Make the entire experience easy, enjoyable, and genuinely exciting. If you want a site that feels clean, fast, and true to your brand… you're in the right place.</p>
+            <p class="about__text" data-split-text="true">I help brands turn complicated ideas into simple, beautiful, high-performing websites. No bloated team. No handoff chaos. No generic templates.</p>
+            <p class="about__text" data-split-text="true">Just a clear process, thoughtful design, and high-quality development, handled end-to-end by one person who actually listens.</p>
+          <p class="about__text" data-split-text="true">My approach is simple: Make the entire experience easy, enjoyable, and genuinely exciting. If you want a site that feels clean, fast, and true to your brand… you're in the right place.</p>
           </div>
         </div>
       </div>
@@ -120,8 +131,10 @@
     <section id="work" class="work-section">
       <div class="work-container">
         <div class="work-header">
-          <h2 class="work-header__title">Featured Work</h2>
-          <p class="work-header__subtitle">A curated selection of my recent projects — each focused on clarity, identity, and performance.</p>
+          <div class="text-reveal-wrapper">
+            <h2 class="work-header__title text-reveal" data-text="Featured Work"></h2>
+          </div>
+          <p class="work-header__subtitle" data-split-text="true">A curated selection of my recent projects — each focused on clarity, identity, and performance.</p>
         </div>
         <div class="works-grid">
           <!-- Project 1 - Nova Studio -->
@@ -221,8 +234,10 @@
       <div class="process__sticky-wrapper">
         <div class="process__content" id="processContent">
           <div class="process__header">
-            <h2 class="process__title">How I Work</h2>
-            <p class="process__subtitle">A simple, transparent workflow designed to keep things collaborative, predictable, and stress-free.</p>
+            <div class="text-reveal-wrapper">
+              <h2 class="process__title text-reveal" data-text="How I Work"></h2>
+            </div>
+            <p class="process__subtitle" data-split-text="true">A simple, transparent workflow designed to keep things collaborative, predictable, and stress-free.</p>
           </div>
           <div class="process__steps-container">
             <div class="process__step active">
@@ -303,8 +318,10 @@
       <div class="container">
         <div class="contact-grid">
           <div class="contact-content">
-            <h2>Let's Build Something You'll Be Proud Of</h2>
-            <p class="contact-subtitle">Tell me a bit about your project — I'll get back to you within 24 hours.</p>
+            <div class="text-reveal-wrapper">
+              <h2 class="text-reveal" data-text="Let's Build Something You'll Be Proud Of"></h2>
+            </div>
+            <p class="contact-subtitle" data-split-text="true">Tell me a bit about your project — I'll get back to you within 24 hours.</p>
           </div>
           <div class="contact-form-wrapper">
             <form class="contact-form" id="contactForm"
