@@ -1,4 +1,3 @@
-
     /* ============================================ */
 /* ROOT VARIABLES */
 /* ============================================ */
@@ -116,6 +115,48 @@ h1, h2, h3 {
   line-height: 1.1;
   letter-spacing: 0.02em;
   transition: color 0.4s;
+}
+
+
+/* ============================================ */
+/* TEXT REVEAL ANIMATION */
+/* ============================================ */
+.text-reveal-wrapper {
+  overflow: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+.text-reveal {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.text-reveal .char {
+  display: inline-block;
+  transform: translateY(-100%);
+  opacity: 0;
+  animation: slideDownChar 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+.text-reveal .space {
+  width: 0.3em;
+}
+
+@keyframes slideDownChar {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .text-reveal .char {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
 }
 
 body.dark-mode h1,
@@ -474,12 +515,12 @@ body.dark-mode .mobile-nav a {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 200px 0;
-  text-align: center;
+  padding: 100px 0;
+  text-align: start;
 }
 
 .hero-content {
-  max-width: 900px;
+  max-width: 1300px;
   margin: 0 auto;
 }
 
