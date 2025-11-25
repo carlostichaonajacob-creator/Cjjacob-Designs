@@ -1,465 +1,1265 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content="CJJacob">
-  <meta name="keywords" content="web designer, web developer, portfolio, Cape Town">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://cjjacob.com">
-  <link rel="icon" type="image/png" href="assets/images/favicon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon.png">
+
+    // ============================================
+// GSAP SETUP new upadated code
+// ============================================
+
+
+
+// ============================================
+// TEXT REVEAL ANIMATION - WORD-AWARE VERSION
+// ============================================
+function splitTextToChars(element) {
+  const text = element.getAttribute('data-text');
+  const baseDelay = parseFloat(element.getAttribute('data-delay')) || 0;
   
-  <!-- Open Graph -->
-  <meta property="og:title" content="CJJacob - Design Studio">
-  <meta property="og:description" content="I design & build websites that feel as good as they look. Clean visuals, smooth interactions, and websites that help your business grow.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://cjjacob.com">
-  <meta property="og:image" content="https://cjjacob.com/og-image.jpg">
-  
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="CJJacob - Design Studio">
-  <meta name="twitter:description" content="I design & build websites that feel as good as they look.">
-  <meta name="twitter:image" content="https://cjjacob.com/og-image.jpg">
-  
-  <title>CJJacob - Design Studio</title>
-  
-  <!-- Preconnect for Performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-  <link rel="preconnect" href="https://images.unsplash.com">
-  
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
-
-  <link rel="stylesheet" href="assets/css/styles.css">
-  
-</head>
-<body>
-  <!-- Skip Link for Accessibility -->
-  <a href="#main-content" class="skip-link">Skip to main content</a>
-
-  <!-- Custom Cursor -->
-  <div class="custom-cursor" id="customCursor">
-    <span>View</span>
-  </div>
-
-  <!-- ============================================ -->
-  <!-- NAVIGATION -->
-  <!-- ============================================ -->
-  <header>
-    <nav class="navbar" aria-label="Main navigation">
-
-      <div class="navbar-inner">
-
-        <a href="#home" class="logo">CJJACOB</a>
-
-          <div class="left-container">
-
-            <ul class="nav-links desktop-nav">
-              <li><a href="#about">About</a></li>
-              <li><a href="#work">Work</a></li>
-              <li><a href="#process">Process</a></li>
-              <li><a href="#contact">Contact</a></li>
-              <li><a href="#contact" class="cta-btn">Start Project</a></li>
-            </ul>
-
-            <button class="hamburger" aria-label="Toggle navigation menu" aria-expanded="false">
-              <span></span>
-              <span></span>
-              <span></span>
-            </button>
-
-          </div>
-        
-
-      </div>
-      <div class="mobile-menu-overlay">
-        <ul class="nav-links mobile-nav">
-          <li><a href="#about">About</a></li>
-          <li><a href="#work">Work</a></li>
-          <li><a href="#process">Process</a></li>
-          <li><a href="#contact">Contact</a></li>
-          <li><a href="#contact" class="cta-btn">Start Project</a></li>
-        </ul>
-      </div>
-    </nav>
-  </header>
-
-  <main id="main-content">
-    <!-- ============================================ -->
-    <!-- HERO SECTION -->
-    <!-- ============================================ -->
-    <section id="home" class="hero">
-      <div class="container">
-        <div class="hero-content">
-          <div  class="text-reveal-wrapper">
-            <h1 class="hero-title text-reveal" data-text="I build custome website that feel as good as they look"></h1>
-          </div>
-          <div class="text-reveal-wrapper">
-            <p class="subtext" data-split-text="true">A one-person design & development studio focused on clean visuals, smooth interactions, and websites that help your business grow</p>
-          </div>
-          </div>
-
-          <div class="hero-ctas">
-            <a href="#work" class="btn-primary">See My Work</a>
-            <a href="#contact" class="btn-secondary">Start a Project</a>
-          </div>
-        </div>
-      </div>
-    </section>
-    
-    <!-- ============================================ -->
-    <!-- ABOUT SECTION -->
-    <!-- ============================================ -->
-    <section id="about" class="about">
-      <div class="about__container">
-        <div class="text-reveal-wrapper">
-          <h2 class="about__title text-reveal" data-text="A designer who codes. A developer who cares about design."></h2>
-        </div>
-        <div class="about__content">
-          <div class="about__image-wrapper">
-            <div class="about__image" role="img" aria-label="CJJacob profile photo web designer and developer at work"></div>
-          </div>
-          <div class="about__body">
-            <p class="about__text" data-split-text="true">I help brands turn complicated ideas into simple, beautiful, high-performing websites. No bloated team. No handoff chaos. No generic templates.</p>
-            <p class="about__text" data-split-text="true">Just a clear process, thoughtful design, and high-quality development, handled end-to-end by one person who actually listens.</p>
-          <p class="about__text" data-split-text="true">My approach is simple: Make the entire experience easy, enjoyable, and genuinely exciting. If you want a site that feels clean, fast, and true to your brand… you're in the right place.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-    
-    <!-- ============================================ -->
-    <!-- WORK SECTION -->
-    <!-- ============================================ -->
-    <section id="work" class="work-section">
-      <div class="work-container">
-        <div class="work-header">
-          <div class="text-reveal-wrapper">
-            <h2 class="work-header__title text-reveal" data-text="Featured Work"></h2>
-          </div>
-          <p class="work-header__subtitle" data-split-text="true">A curated selection of my recent projects each focused on clarity, identity, and performance.</p>
-        </div>
-        <div class="works-grid">
-          <!-- Project 1 - Nova Studio -->
-          <a href="https://easingmind.vercel.app/" target="_blank" rel="noopener noreferrer" class="work-card-link" data-cursor="true">
-            <div class="work-card">
-              <div class="background-box gradient-1">
-                <div class="browser-window">
-                  <div class="browser-chrome">
-                    <div class="window-controls">
-                      <div class="control-btn close"></div>
-                      <div class="control-btn minimize"></div>
-                      <div class="control-btn maximize"></div>
-                    </div>
-                    <div class="nav-arrows">
-                      <div class="arrow-btn">‹</div>
-                      <div class="arrow-btn">›</div>
-                    </div>
-                    <div class="url-bar">
-                      <span class="lock-icon">🔒</span>
-                      <span class="url-text">novastudio.com</span>
-                    </div>
-                    <div class="browser-actions">
-                      <div class="action-btn">⋯</div>
-                      <div class="action-btn">+</div>
-                      <div class="action-btn">⎘</div>
-                    </div>
-                  </div>
-                  <div class="browser-viewport">
-                    <img src="assets/images/easing mind wallpaer home section.png" alt="Nova Studio website screenshot showing modern redesign with cinematic motion and clean composition" loading="lazy">
-                  </div>
-                </div>
-              </div>
-              
-              <div class="project-info-overlay">
-                <h3 class="project-title">Easing mind</h3>
-                <p class="project-description">Modern redesign with cinematic motion and clean composition.</p>
-                <div class="project-tags">
-                  <span class="tag">DESIGN</span>
-                  <span class="tag">DEVELOPMENT</span>
-                  <span class="tag">2025</span>
-                </div>
-              </div>
-            </div>
-          </a>
-
-          <!-- Project 2 - ArcBright Consulting -->
-          <a href="https://health-care-plus-medical-9mzx.vercel.app/" target="_blank" rel="noopener noreferrer" class="work-card-link" data-cursor="true">
-            <div class="work-card">
-              <div class="background-box gradient-2">
-                <div class="browser-window">
-                  <div class="browser-chrome">
-                    <div class="window-controls">
-                      <div class="control-btn close"></div>
-                      <div class="control-btn minimize"></div>
-                      <div class="control-btn maximize"></div>
-                    </div>
-                    <div class="nav-arrows">
-                      <div class="arrow-btn">‹</div>
-                      <div class="arrow-btn">›</div>
-                    </div>
-                    <div class="url-bar">
-                      <span class="lock-icon">🔒</span>
-                      <span class="url-text">arcbright.com</span>
-                    </div>
-                    <div class="browser-actions">
-                      <div class="action-btn">⋯</div>
-                      <div class="action-btn">+</div>
-                      <div class="action-btn">⎘</div>
-                    </div>
-                  </div>
-                  <div class="browser-viewport">
-                    <img src="assets/images/health care .png" alt="ArcBright Consulting website screenshot displaying professional, minimal experience with subtle depth" loading="lazy">
-                  </div>
-                </div>
-              </div>
-              
-              <div class="project-info-overlay">
-                <h3 class="project-title">Health Care Plus</h3>
-                <p class="project-description">A professional, minimal experience with subtle depth and interaction.</p>
-                <div class="project-tags">
-                  <span class="tag">DESIGN</span>
-                  <span class="tag">DEVELOPMENT</span>
-                  <span class="tag">2025</span>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================================ -->
-    <!-- PROCESS SECTION -->
-    <!-- ============================================ -->
-    <section id="process" class="process">
-      <!-- DESKTOP PROCESS -->
-      <div class="process__sticky-wrapper">
-        <div class="process__content" id="processContent">
-          <div class="process__header">
-            <div class="text-reveal-wrapper">
-              <h2 class="process__title text-reveal" data-text="How I Work"></h2>
-            </div>
-            <p class="process__subtitle" data-split-text="true">A simple, transparent workflow designed to keep things collaborative, predictable, and stress-free.</p>
-          </div>
-          <div class="process__steps-container">
-            <div class="process__step active">
-              <div class="process__step-number">Step 01</div>
-              <h3 class="process__step-title">Discovery & Research</h3>
-              <p class="process__step-text">We start with clarity — your goals, audience, challenges, and what "success" actually means. This phase gives the project a strategic core.</p>
-            </div>
-            <div class="process__step">
-              <div class="process__step-number">Step 02</div>
-              <h3 class="process__step-title">Strategy & Planning</h3>
-              <p class="process__step-text">We map out user flows, content structure, page hierarchy, and everything needed before design. It turns vision into a clear, actionable blueprint.</p>
-            </div>
-            <div class="process__step">
-              <div class="process__step-number">Step 03</div>
-              <h3 class="process__step-title">Design & Prototyping</h3>
-              <p class="process__step-text">This is where your brand becomes an experience. Clean layouts, intentional typography, and interactive prototypes that show you exactly what the site will look and feel like.</p>
-            </div>
-            <div class="process__step">
-              <div class="process__step-number">Step 04</div>
-              <h3 class="process__step-title">Development & Testing</h3>
-              <p class="process__step-text">I build your site using clean, modern code — fast, responsive, and SEO-friendly. Every interaction is tested across devices for a flawless experience.</p>
-            </div>
-            <div class="process__step">
-              <div class="process__step-number">Step 05</div>
-              <h3 class="process__step-title">Launch & Optimization</h3>
-              <p class="process__step-text">Your site goes live, but my support doesn't stop. I help monitor performance, refine details, and keep the experience running smoothly.</p>
-            </div>
-          </div>
-          <div class="process__progress" role="tablist" aria-label="Process steps navigation">
-            <button class="process__dot active" role="tab" aria-label="Go to step 1" aria-selected="true"></button>
-            <button class="process__dot" role="tab" aria-label="Go to step 2" aria-selected="false"></button>
-            <button class="process__dot" role="tab" aria-label="Go to step 3" aria-selected="false"></button>
-            <button class="process__dot" role="tab" aria-label="Go to step 4" aria-selected="false"></button>
-            <button class="process__dot" role="tab" aria-label="Go to step 5" aria-selected="false"></button>
-          </div>
-        </div>
-        <div class="process__spacer"></div>
-      </div>
-
-      <!-- MOBILE PROCESS CAROUSEL -->
-      <div class="process-mobile">
-        <div class="process-mobile-container">
-          <!-- Section Title -->
-          <div class="mobile-section-title">
-            <h2>How I Work</h2>
-            <p>A simple, transparent workflow designed to keep things collaborative, predictable, and stress-free.</p>
-          </div>
-
-          <!-- Cards Viewport -->
-          <div class="mobile-cards-viewport">
-            <div class="mobile-cards-container" id="mobileCardsContainer"></div>
-          </div>
-
-          <!-- Navigation Controls -->
-          <div class="mobile-nav-controls">
-            <button class="mobile-nav-arrow" id="mobilePrevBtn" aria-label="Previous step">
-              <svg viewBox="0 0 24 24">
-                <path d="M15 18l-6-6 6-6"/>
-              </svg>
-            </button>
-
-            <div class="mobile-progress-dots" id="mobileProgressDots"></div>
-
-            <button class="mobile-nav-arrow" id="mobileNextBtn" aria-label="Next step">
-              <svg viewBox="0 0 24 24">
-                <path d="M9 18l6-6-6-6"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================================ -->
-    <!-- CONTACT SECTION -->
-    <!-- ============================================ -->
-    <section id="contact">
-      <div class="container">
-        <div class="contact-grid">
-          <div class="contact-content">
-            <div class="text-reveal-wrapper">
-              <h2 class="text-reveal" data-text="Let's Build Something You'll Be Proud Of"></h2>
-            </div>
-            <p class="contact-subtitle" data-split-text="true">Tell me a bit about your project — I'll get back to you within 24 hours.</p>
-          </div>
-          <div class="contact-form-wrapper">
-            <form class="contact-form" id="contactForm"
-            action="https://formspree.io/f/mqajnwwr" method="post">
-              <div class="form-group">
-                <label for="fullName">Full Name</label>
-                <input type="text" id="fullName" name="fullName" autocomplete="name" required>
-              </div>
-              <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" autocomplete="email" required>
-              </div>
-              <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="tel" id="phone" name="phone" autocomplete="tel">
-              </div>
-                <!--
-              <div class="form-group">
-                <label for="projectType">Project Type</label>
-                <select id="projectType" name="projectType" required>
-                  <option value="">Select a type</option>
-                  <option value="website">Website</option>
-                  <option value="redesign">Redesign</option>
-                  <option value="landing-page">Landing Page</option>
-                  <option value="other">Other</option>
-                </select>
-              </div> -->
-              <div class="form-group">
-                <label for="message">Message</label>
-                <textarea id="message" name="message" required></textarea>
-              </div>
-              <button type="submit" class="submit-btn">Send Message</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- ============================================ -->
-  <!-- FOOTER -->
-  <!-- ============================================ -->
-  <footer>
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-left">
-          <div class="footer-logo">CJJacob</div>
-          <p class="footer-tagline">Crafted Websites. Built With Intention. Designed for Results.</p>
-        </div>
-        <div class="footer-right">
-          <nav class="footer-nav" aria-label="Footer navigation">
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="#work">Work</a>
-            <a href="#process">Process</a>
-            <a href="#contact">Contact</a>
-          </nav>
-          <div class="footer-contact">
-            <a href="mailto:cjjacobdesigns@gmail.com" class="footer-contact-item">
-              <i class="fas fa-envelope" aria-hidden="true"></i>
-              <span>cjjacobdesigns@gmail.com</span>
-            </a>
-            <a href="tel:+27752633429" class="footer-contact-item">
-              <i class="fas fa-phone" aria-hidden="true"></i>
-              <span>+27 75 263 3429</span>
-            </a>
-            <a href="https://wa.me/27752633429" class="footer-contact-item" target="_blank" rel="noopener noreferrer">
-              <i class="fab fa-whatsapp" aria-hidden="true"></i>
-              <span>WhatsApp</span>
-            </a>
-          </div>
-          <div class="footer-socials">
-            <a href="https://linkedin.com/in/cjjacob" class="social-icon" aria-label="LinkedIn profile" target="_blank" rel="noopener noreferrer">
-              <i class="fab fa-linkedin-in" aria-hidden="true"></i>
-            </a>
-            <a href="https://wa.me/27752633429" class="social-icon" aria-label="Contact on WhatsApp" target="_blank" rel="noopener noreferrer">
-              <i class="fab fa-whatsapp" aria-hidden="true"></i>
-            </a>
-            <a href="https://instagram.com/carlostashingajacob" class="social-icon" aria-label="Instagram profile" target="_blank" rel="noopener noreferrer">
-              <i class="fab fa-instagram" aria-hidden="true"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-  <p>© 2025 CJJacob Designs. All rights reserved. Crafted with intention.</p>
-<div class="footer-legal">
-  <a href="privacy.html">
-    <i class="fas fa-shield-alt" aria-hidden="true"></i>
-    Privacy Policy
-  </a>
-  <span>•</span>
-    <a href="terms.html">
-      <i class="fas fa-file-contract" aria-hidden="true"></i>
-    Terms of Service
-    </a>
-</div>
-  </footer>
-</body>
-
-
-  <!-- JSON-LD Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "name": "CJJacob Design Studio",
-    "description": "A one-person design & development studio focused on clean visuals, smooth interactions, and websites that help your business grow.",
-    "url": "https://cjjacob.com",
-    "email": "cjjacobdesigns@gmail.com",
-    "telephone": "+27752633429",
-    "address": {
-      "@type": "PostalAddress",
-      "addressCountry": "ZA"
-    },
-    "sameAs": [
-      "https://linkedin.com/in/cjjacob",
-      "https://instagram.com/cjjacob"
-    ]
+  // Store original text as backup
+  if (!element.dataset.originalText) {
+    element.dataset.originalText = element.textContent;
   }
-  </script>
+  
+  element.innerHTML = '';
+  
+  // Split into WORDS first to preserve word boundaries
+  const words = text.split(' ');
+  let charIndex = 0;
+  
+  words.forEach((word, wordIndex) => {
+    // Create word wrapper - THIS prevents mid-word line breaks
+    const wordWrapper = document.createElement('span');
+    wordWrapper.classList.add('word-wrapper');
     
-<!-- Add Lenis Smooth Scroll -->
-<script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
-<script src="assets/js/script.js" defer></script>
-</body>
+    // Split each word into characters
+    word.split('').forEach((char) => {
+      const span = document.createElement('span');
+      span.classList.add('char');
+      span.textContent = char;
+      
+      // Dynamic character delay based on parent element
+      const isAboutSection = element.closest('.about') !== null;
+      const delayMultiplier = isAboutSection ? 0.05 : 0.03;
+      const charDelay = baseDelay + (charIndex * delayMultiplier);
+      span.style.animationDelay = `${charDelay}s`;
+      
+      wordWrapper.appendChild(span);
+      charIndex++;
+    });
+    
+    element.appendChild(wordWrapper);
+    
+    // Add space between words (except after last word)
+    if (wordIndex < words.length - 1) {
+      const space = document.createElement('span');
+      space.classList.add('word-space');
+      space.innerHTML = '&nbsp;';
+      element.appendChild(space);
+    }
+  });
+}
 
-  <script src="assets/js/script.js" defer></script>
-</body>
-</html>
+// ============================================
+// LINE-BY-LINE REVEAL - REFERENCE IMPLEMENTATION
+// ============================================
+/**
+ * Splits text into animated lines using reference method
+ * @param {HTMLElement} element - The element to split
+ */
+function splitIntoLines(element) {
+  if (!element || element.dataset.splitProcessed) return;
+  
+  const text = element.textContent.trim();
+  if (!text) return;
+  
+  const words = text.split(/\s+/);
+  element.innerHTML = '';
+  
+  // Store original text for resize handling
+  element.dataset.originalText = text;
+  
+  // Create temporary element to measure line breaks
+  const temp = document.createElement('div');
+  temp.style.cssText = `
+    position: absolute;
+    visibility: hidden;
+    width: ${element.offsetWidth}px;
+    font-size: ${window.getComputedStyle(element).fontSize};
+    font-family: ${window.getComputedStyle(element).fontFamily};
+    font-weight: ${window.getComputedStyle(element).fontWeight};
+    line-height: ${window.getComputedStyle(element).lineHeight};
+    letter-spacing: ${window.getComputedStyle(element).letterSpacing};
+    text-align: ${window.getComputedStyle(element).textAlign};
+  `;
+  document.body.appendChild(temp);
+  
+  let lines = [];
+  let currentLine = [];
+  let lastTop = null;
+  
+  words.forEach((word, i) => {
+    const span = document.createElement('span');
+    span.textContent = word + ' ';
+    span.style.display = 'inline';
+    temp.appendChild(span);
+    
+    const rect = span.getBoundingClientRect();
+    const currentTop = rect.top;
+    
+    if (lastTop !== null && currentTop > lastTop) {
+      lines.push(currentLine.join(' '));
+      currentLine = [word];
+    } else {
+      currentLine.push(word);
+    }
+    
+    lastTop = currentTop;
+    
+    if (i === words.length - 1) {
+      lines.push(currentLine.join(' '));
+    }
+  });
+  
+  document.body.removeChild(temp);
+  
+  // Build the HTML structure with line masking
+  lines.forEach(lineText => {
+    const lineWrapper = document.createElement('div');
+    lineWrapper.className = 'line';
+    
+    const lineInner = document.createElement('div');
+    lineInner.className = 'line-inner';
+    lineInner.textContent = lineText;
+    
+    lineWrapper.appendChild(lineInner);
+    element.appendChild(lineWrapper);
+  });
+  
+  element.dataset.splitProcessed = 'true';
+  return element.querySelectorAll('.line');
+}
+
+// ============================================
+// ANIMATE LINES - REFERENCE IMPLEMENTATION
+// ============================================
+/**
+ * Animates lines with reference method (per-line ScrollTrigger)
+ * @param {NodeList} lines - The line elements to animate
+ * @param {String|Element} trigger - The trigger element
+ * @param {Number} startDelay - Initial delay (optional, for sequencing)
+ */
+function setupLineAnimation(lines, trigger, startDelay = 0) {
+  if (!lines || lines.length === 0) return;
+  
+  lines.forEach((line, index) => {
+    const lineInner = line.querySelector('.line-inner');
+    if (!lineInner) return;
+    
+    gsap.to(lineInner, {
+      y: 0,
+      duration: 1.2,
+      delay: startDelay,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: trigger,
+        start: "top 85%",
+        end: "top 65%",
+        toggleActions: "play none none none"
+      }
+    });
+  });
+}
+
+
+// ============================================
+// SINGLE DOMContentLoaded - Everything inside ONE listener
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+  gsap.registerPlugin(ScrollTrigger);
+
+  // ============================================
+  // LENIS SMOOTH SCROLL - "GREASED WHEEL" EFFECT
+  // ============================================
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smooth: true,
+    smoothTouch: false,
+    touchMultiplier: 2,
+    infinite: false
+  });
+
+  // Animation loop - keeps Lenis running
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  // CRITICAL: Sync Lenis with GSAP ScrollTrigger
+  lenis.on('scroll', ScrollTrigger.update);
+
+  gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
+  });
+
+  gsap.ticker.lagSmoothing(0);
+
+  // ============================================
+  // SMOOTH SCROLL FOR ANCHOR LINKS
+  // ============================================
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href');
+      const target = document.querySelector(targetId);
+      
+      if (target) {
+        lenis.scrollTo(target, {
+          offset: 0,
+          duration: 1.5,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+        });
+      }
+    });
+  });
+
+  // ============================================
+  // MOBILE CHECK
+  // ============================================
+  const isMobile = () => window.innerWidth < 768;
+  let cachedIsMobile = isMobile();
+
+  window.addEventListener('resize', () => {
+    cachedIsMobile = isMobile();
+  }, { passive: true });
+
+  // ============================================
+  // HAMBURGER MENU TOGGLE
+  // ============================================
+  const hamburger = document.querySelector('.hamburger');
+  const mobileOverlay = document.querySelector('.mobile-menu-overlay');
+  const mobileLinks = document.querySelectorAll('.mobile-nav a');
+  let menuOpen = false;
+
+  if (hamburger && mobileOverlay) {
+    hamburger.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      hamburger.classList.toggle('active');
+      hamburger.setAttribute('aria-expanded', menuOpen);
+      mobileOverlay.classList.toggle('active');
+      document.body.style.overflow = menuOpen ? 'hidden' : '';
+    });
+
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        menuOpen = false;
+        hamburger.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', false);
+        mobileOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+
+  // ============================================
+  // NAVBAR SCROLLED STATE
+  // ============================================
+  const navbar = document.querySelector('.navbar');
+  if (navbar) {
+    ScrollTrigger.create({
+      start: 'top -40',
+      onEnter: () => navbar.classList.add('scrolled'),
+      onLeaveBack: () => navbar.classList.remove('scrolled')
+    });
+  }
+
+  // ... ALL YOUR OTHER CODE CONTINUES HERE ...
+  // (Everything from your original file goes inside this single DOMContentLoaded)
+
+}); // <-- Single closing bracket for DOMContentLoaded
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  gsap.registerPlugin(ScrollTrigger);
+
+  const isMobile = () => window.innerWidth < 768;
+  let cachedIsMobile = isMobile();
+
+  // Update cached value on resize
+  window.addEventListener('resize', () => {
+    cachedIsMobile = isMobile();
+  }, { passive: true });
+
+  // ============================================
+  // HAMBURGER MENU TOGGLE
+  // ============================================
+  const hamburger = document.querySelector('.hamburger');
+  const mobileOverlay = document.querySelector('.mobile-menu-overlay');
+  const mobileLinks = document.querySelectorAll('.mobile-nav a');
+  let menuOpen = false;
+
+  if (hamburger && mobileOverlay) {
+    hamburger.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      hamburger.classList.toggle('active');
+      hamburger.setAttribute('aria-expanded', menuOpen);
+      mobileOverlay.classList.toggle('active');
+      document.body.style.overflow = menuOpen ? 'hidden' : '';
+    });
+
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        menuOpen = false;
+        hamburger.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', false);
+        mobileOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+
+  // ============================================
+  // NAVBAR SCROLLED STATE
+  // ============================================
+  const navbar = document.querySelector('.navbar');
+  if (navbar) {
+    ScrollTrigger.create({
+      start: 'top -40',
+      onEnter: () => navbar.classList.add('scrolled'),
+      onLeaveBack: () => navbar.classList.remove('scrolled')
+    });
+  }
+
+  // ============================================
+  // PAGE LOAD ANIMATIONS
+  // ============================================
+// ============================================
+  // PAGE LOAD ANIMATIONS - SEQUENTIAL REVEAL
+  // ============================================
+  const loadTimeline = gsap.timeline({ delay: 0.4 });
+
+  loadTimeline
+    // STEP 1: Logo appears elegantly (0.4s delay + 0.8s duration = completes at 1.2s)
+    .to('.logo', {
+      opacity: 1,
+      duration: 0.8,
+      ease: 'power2.out'
+    })
+    // STEP 2: Nav links fade in sequentially (starts at 1.2s, completes ~2.0s)
+    .to('.nav-links a', {
+      opacity: 0.7,
+      duration: 0.6,
+      stagger: 0.1, // Each link staggers by 0.1s
+      ease: 'power2.out',
+      onComplete: () => {
+        document.querySelectorAll('.nav-links a').forEach(a => a.classList.add('loaded'));
+      }
+    }, '+=0.0') // Start immediately after logo
+    // STEP 3: Hero title container fades in (starts at 2.0s)
+    .to('.hero-title', {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: 'power2.out'
+    }, '+=0.0') // Start immediately after nav
+    // STEP 4: Hero subtext container fades in (starts when title is 60% done = at 2.36s)
+    // The line-by-line animation will be triggered separately below
+    .to('.subtext', {
+      opacity: 1,
+      y: 0,
+      duration: 0.5,
+      ease: 'power2.out'
+    }, '-=0.24') // Start at 60% of previous animation (0.6s * 0.4 = 0.24s remaining)
+    // STEP 5: CTA buttons pop in confidently (after subtext container fades)
+    .to('.hero-ctas', {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: 'power2.out'
+    }, '+=0.3'); // Add 0.3s gap for breathing room
+
+
+// ============================================
+  // TEXT REVEAL ANIMATIONS - HERO
+  // ============================================
+  const heroTitle = document.querySelector('.hero-title.text-reveal');
+  if (heroTitle) {
+    splitTextToChars(heroTitle);
+    // Character animation happens via CSS, triggered after container fades in
+  }
+
+  // ============================================
+  // TEXT SPLIT LINE ANIMATIONS - Initialize all elements
+  // ============================================
+
+  
+// ============================================
+  // HERO SUBTEXT - Line-by-line reveal after title
+  // ============================================
+const subtext = document.querySelector('.subtext[data-split-text="true"]');
+  if (subtext) {
+    document.fonts.ready.then(() => {
+      splitIntoLines(subtext);
+      const subtextLines = subtext.querySelectorAll('.line');
+      
+      // Wait for hero title character reveal to finish (~2.8s), then start
+      setupLineAnimation(subtextLines, '.hero', 2.8);
+    });
+  }
+  
+// ============================================
+  // ABOUT PARAGRAPHS - Line-by-line after title
+  // ============================================
+const aboutTexts = document.querySelectorAll('.about__text[data-split-text="true"]');
+  if (aboutTexts.length > 0) {
+    document.fonts.ready.then(() => {
+      aboutTexts.forEach((text, index) => {
+        splitIntoLines(text);
+        const lines = text.querySelectorAll('.line');
+        
+        // Wait for about title to finish (~0.8s), then stagger paragraphs
+        const paragraphDelay = 1.0 + (index * 0.6);
+        setupLineAnimation(lines, '.about', paragraphDelay);
+      });
+    });
+  }
+  
+// Dynamic character delay based on parent element
+    // About section gets slower reveal (0.05s), others use default (0.03s)
+
+  
+// ============================================
+  // PROCESS SUBTITLE - Line-by-line after title
+  // ============================================
+const processSubtitle = document.querySelector('.process__subtitle[data-split-text="true"]');
+  if (processSubtitle) {
+    document.fonts.ready.then(() => {
+      splitIntoLines(processSubtitle);
+      const lines = processSubtitle.querySelectorAll('.line');
+      
+      // Wait for process title to finish (~1.0s), then start
+      setupLineAnimation(lines, '.process', 1.2);
+    });
+  }
+
+
+// ============================================
+  // WORK SUBTITLE - Line-by-line after title
+  // ============================================
+const workSubtitle = document.querySelector('.work-header__subtitle[data-split-text="true"]');
+  if (workSubtitle) {
+    document.fonts.ready.then(() => {
+      splitIntoLines(workSubtitle);
+      const lines = workSubtitle.querySelectorAll('.line');
+      
+      // Wait for work title to finish (~1.0s), then start
+      setupLineAnimation(lines, '.work-section', 1.2);
+    });
+  }
+  
+// ============================================
+  // CONTACT SUBTITLE - Line-by-line after title
+  // ============================================
+const contactSubtitle = document.querySelector('.contact-subtitle[data-split-text="true"]');
+  if (contactSubtitle) {
+    document.fonts.ready.then(() => {
+      splitIntoLines(contactSubtitle);
+      const lines = contactSubtitle.querySelectorAll('.line');
+      
+      // Wait for contact title to finish (~1.2s), then start
+      setupLineAnimation(lines, '#contact', 1.4);
+    });
+  }
+
+  // ============================================
+  // DARK MODE TRIGGERS - CONSOLIDATED
+  // ============================================
+  const aboutSection = document.querySelector('#about');
+  const processSection = document.querySelector('#process');
+  const contactSection = document.querySelector('#contact');
+
+  if (aboutSection) {
+    ScrollTrigger.create({
+      trigger: '#about',
+      start: 'top 150px',
+      onEnter: () => document.body.classList.add('dark-mode'),
+      onLeaveBack: () => document.body.classList.remove('dark-mode')
+    });
+  }
+
+  if (processSection) {
+    ScrollTrigger.create({
+      trigger: '#process',
+      start: 'top 150px',
+      onEnter: () => document.body.classList.remove('dark-mode'),
+      onLeaveBack: () => document.body.classList.add('dark-mode')
+    });
+  }
+
+  if (contactSection) {
+    ScrollTrigger.create({
+      trigger: '#contact',
+      start: 'top 200px',
+      onEnter: () => document.body.classList.add('dark-mode'),
+      onLeaveBack: () => document.body.classList.remove('dark-mode')
+    });
+  }
+
+  // ============================================
+  // SECTION SCROLL ANIMATIONS
+  // ============================================
+  const aboutTitle = document.querySelector('.about__title');
+  const aboutContent = document.querySelector('.about__content');
+  
+if (aboutTitle) {
+    gsap.to('.about__title', {
+      scrollTrigger: {
+        trigger: '.about',
+        start: 'top 70%',
+        onEnter: () => {
+          const aboutTitleReveal = document.querySelector('.about__title.text-reveal');
+          if (aboutTitleReveal && !aboutTitleReveal.dataset.animated) {
+            splitTextToChars(aboutTitleReveal);
+            aboutTitleReveal.dataset.animated = 'true';
+          }
+        }
+      },
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: 'power3.out'
+    });
+  }
+
+  if (aboutContent) {
+    gsap.to('.about__content', {
+      scrollTrigger: {
+        trigger: '.about',
+        start: 'top 65%'
+      },
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      delay: 0.1,
+      ease: 'power3.out'
+    });
+  }
+
+const workHeader = document.querySelector('.work-header');
+  if (workHeader) {
+    gsap.to('.work-header', {
+      scrollTrigger: {
+        trigger: '.work-section',
+        start: 'top 70%',
+        onEnter: () => {
+          const workTitleReveal = document.querySelector('.work-header__title.text-reveal');
+          if (workTitleReveal && !workTitleReveal.dataset.animated) {
+            splitTextToChars(workTitleReveal);
+            workTitleReveal.dataset.animated = 'true';
+          }
+        }
+      },
+      opacity: 1,
+      duration: 1.0, // INCREASED for impact
+      ease: 'power2.out'
+    });
+  }
+
+gsap.utils.toArray('.work-card').forEach((item, i) => {
+    gsap.to(item, {
+      scrollTrigger: {
+        trigger: item,
+        start: 'top 75%'
+      },
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      delay: 0.3 + (i * 0.1), // ADD 0.3s initial delay before cards start
+      ease: 'power2.out'
+    });
+  });
+
+const processHeader = document.querySelector('.process__header');
+  if (processHeader) {
+    gsap.to('.process__header', {
+      scrollTrigger: {
+        trigger: '.process',
+        start: 'top 60%',
+        onEnter: () => {
+          const processTitles = document.querySelectorAll('.process__title.text-reveal');
+          processTitles.forEach(title => {
+            if (!title.dataset.animated) {
+              splitTextToChars(title);
+              title.dataset.animated = 'true';
+            }
+          });
+        }
+      },
+      opacity: 1,
+      duration: 1.0, // INCREASED
+      ease: 'power2.out'
+    });
+  }
+
+
+  // ============================================
+  // PROCESS STEP ANIMATION (DESKTOP)
+  // ============================================
+  const steps = document.querySelectorAll('.process__step');
+  const dots = document.querySelectorAll('.process__dot');
+  let currentStep = 0;
+
+  const updateProcessStep = (newStep) => {
+    if (newStep === currentStep) return;
+    currentStep = newStep;
+    
+    steps.forEach((step, i) => {
+      step.classList.remove('active', 'prev', 'next');
+      if (i === currentStep) {
+        step.classList.add('active');
+      } else if (i === currentStep - 1) {
+        step.classList.add('prev');
+      } else if (i === currentStep + 1) {
+        step.classList.add('next');
+      }
+    });
+    
+    dots.forEach((dot, i) => {
+      const isActive = i === currentStep;
+      dot.classList.toggle('active', isActive);
+      dot.setAttribute('aria-selected', isActive);
+    });
+  };
+
+  if (window.innerWidth >= 1280 && steps.length > 0) {
+    ScrollTrigger.create({
+    trigger: '.process__sticky-wrapper',
+    start: 'top top',
+    end: 'bottom bottom',
+    onUpdate: (self) => {
+      const progress = self.progress;
+      const total = steps.length - 1;
+      const newStep = Math.min(Math.round(progress * total), total);
+      updateProcessStep(newStep);
+    }
+  });
+}
+  // Add click handlers for process dots
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      updateProcessStep(i);
+    });
+  });
+
+  // ============================================
+  // MOBILE PROCESS CAROUSEL
+  // ============================================
+  const mobileSteps = [
+    {
+      number: "01",
+      title: "Discovery & Research",
+      description: "We explore your vision, target audience, and competitive landscape to build a solid foundation for your project."
+    },
+    {
+      number: "02",
+      title: "Strategy & Planning",
+      description: "We develop strategy including user journey mapping and content structure to ensure optimal results."
+    },
+    {
+      number: "03",
+      title: "Design & Prototyping",
+      description: "Your brand comes to life through mockups and interactive prototypes that capture your vision perfectly."
+    },
+    {
+      number: "04",
+      title: "Development & Build",
+      description: "I hand-code your site with performance and accessibility as top priorities for long-term success."
+    },
+    {
+      number: "05",
+      title: "Launch & Optimization",
+      description: "Your site launches optimized for search engines and user experience, ready to grow your business."
+    }
+  ];
+
+  let mobileCurrentStep = 0;
+  let mobileStartX = 0;
+  let mobileCurrentX = 0;
+  let mobileStartY = 0;
+  let mobileCurrentY = 0;
+  let mobileIsDragging = false;
+  const MIN_SWIPE = 80;
+
+  function initMobileCarousel() {
+    if (window.innerWidth >= 1280) return; // Only on mobile
+    
+    renderMobileCards();
+    renderMobileDots();
+    setupMobileEvents();
+    updateMobileView();
+  }
+
+  function renderMobileCards() {
+    const container = document.getElementById('mobileCardsContainer');
+    if (!container) return;
+    
+    mobileSteps.forEach((step, index) => {
+      const card = document.createElement('div');
+      card.className = `mobile-card mobile-card-${index + 1}`;
+      card.innerHTML = `
+        <div class="mobile-card-inner">
+          <div class="mobile-gradient-accent"></div>
+          <div class="mobile-card-decoration mobile-decoration-1"></div>
+          <div class="mobile-card-decoration mobile-decoration-2"></div>
+          <div class="mobile-card-content">
+            <div class="mobile-step-badge">
+              <span class="mobile-step-number">${step.number}</span>
+              <span>Step ${step.number}</span>
+            </div>
+            <h3 class="mobile-card-title">${step.title}</h3>
+            <p class="mobile-card-description">${step.description}</p>
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function renderMobileDots() {
+    const container = document.getElementById('mobileProgressDots');
+    if (!container) return;
+    
+    mobileSteps.forEach((_, index) => {
+      const dot = document.createElement('button');
+      dot.className = 'mobile-dot';
+      dot.setAttribute('aria-label', `Go to step ${index + 1}`);
+      dot.addEventListener('click', () => {
+        goToMobileStep(index);
+      });
+      container.appendChild(dot);
+    });
+  }
+
+  function setupMobileEvents() {
+    const container = document.getElementById('mobileCardsContainer');
+    if (!container) return;
+    
+    // Touch events
+    container.addEventListener('touchstart', handleMobileStart, { passive: true });
+    container.addEventListener('touchmove', handleMobileMove, { passive: false });
+    container.addEventListener('touchend', handleMobileEnd, { passive: true });
+    
+    // Mouse events
+    container.addEventListener('mousedown', handleMobileStart);
+    container.addEventListener('mousemove', handleMobileMove);
+    container.addEventListener('mouseup', handleMobileEnd);
+    container.addEventListener('mouseleave', handleMobileEnd);
+    
+    // Navigation buttons
+    const prevBtn = document.getElementById('mobilePrevBtn');
+    const nextBtn = document.getElementById('mobileNextBtn');
+    
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        if (mobileCurrentStep > 0) {
+          goToMobileStep(mobileCurrentStep - 1);
+        }
+      });
+    }
+    
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        if (mobileCurrentStep < mobileSteps.length - 1) {
+          goToMobileStep(mobileCurrentStep + 1);
+        }
+      });
+    }
+  }
+
+  function handleMobileStart(e) {
+    mobileIsDragging = true;
+    mobileStartX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+    mobileStartY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    mobileCurrentX = mobileStartX;
+    mobileCurrentY = mobileStartY;
+  }
+
+  function handleMobileMove(e) {
+    if (!mobileIsDragging) return;
+    
+    mobileCurrentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+    mobileCurrentY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    
+    const diffX = Math.abs(mobileCurrentX - mobileStartX);
+    const diffY = Math.abs(mobileCurrentY - mobileStartY);
+    
+    // Determine if it's a horizontal or vertical swipe
+    if (diffX > diffY && diffX > 10) {
+      // Horizontal swipe - handle card navigation
+      e.preventDefault(); // Prevent page scroll
+      
+      const diff = mobileCurrentX - mobileStartX;
+      const cards = document.querySelectorAll('.mobile-card');
+      const dragProgress = Math.max(-1, Math.min(1, diff / 300));
+      
+      cards.forEach((card, index) => {
+        if (index === mobileCurrentStep) {
+          card.style.transform = `translateX(${dragProgress * 100}px) scale(${1 - Math.abs(dragProgress) * 0.1})`;
+          card.style.opacity = 1 - Math.abs(dragProgress) * 0.3;
+        }
+      });
+    } else if (diffY > diffX && diffY > 10) {
+      // Vertical swipe - allow normal page scroll
+      mobileIsDragging = false; // Stop card dragging
+      document.querySelectorAll('.mobile-card').forEach(card => {
+        card.style.transform = '';
+        card.style.opacity = '';
+      });
+    }
+  }
+
+  function handleMobileEnd(e) {
+    if (!mobileIsDragging) return;
+    
+    const diffX = mobileCurrentX - mobileStartX;
+    const diffY = Math.abs(mobileCurrentY - mobileStartY);
+    const diffXAbs = Math.abs(diffX);
+    
+    // Reset transforms
+    document.querySelectorAll('.mobile-card').forEach(card => {
+      card.style.transform = '';
+      card.style.opacity = '';
+    });
+    
+    // Only change cards if it was a horizontal swipe
+    if (diffXAbs > diffY) {
+      // Determine swipe direction
+      if (diffX < -MIN_SWIPE && mobileCurrentStep < mobileSteps.length - 1) {
+        goToMobileStep(mobileCurrentStep + 1);
+      } else if (diffX > MIN_SWIPE && mobileCurrentStep > 0) {
+        goToMobileStep(mobileCurrentStep - 1);
+      } else {
+        updateMobileView(); // Snap back
+      }
+    }
+    
+    mobileIsDragging = false;
+    mobileStartX = 0;
+    mobileCurrentX = 0;
+    mobileStartY = 0;
+    mobileCurrentY = 0;
+  }
+
+  function goToMobileStep(index) {
+    mobileCurrentStep = index;
+    updateMobileView();
+  }
+
+  function updateMobileView() {
+    const cards = document.querySelectorAll('.mobile-card');
+    const dots = document.querySelectorAll('.mobile-dot');
+    
+    cards.forEach((card, index) => {
+      card.className = `mobile-card mobile-card-${index + 1}`;
+      
+      const diff = index - mobileCurrentStep;
+      
+      if (diff === 0) {
+        card.classList.add('active');
+      } else if (diff === 1) {
+        card.classList.add('next');
+      } else if (diff === -1) {
+        card.classList.add('prev');
+      } else if (diff >= 2) {
+        card.classList.add('far-next');
+      } else if (diff <= -2) {
+        card.classList.add('far-prev');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+    
+    // Update dots
+    dots.forEach((dot, index) => {
+      dot.classList.toggle('active', index === mobileCurrentStep);
+    });
+    
+    // Update navigation buttons
+    const prevBtn = document.getElementById('mobilePrevBtn');
+    const nextBtn = document.getElementById('mobileNextBtn');
+    if (prevBtn) prevBtn.classList.toggle('disabled', mobileCurrentStep === 0);
+    if (nextBtn) nextBtn.classList.toggle('disabled', mobileCurrentStep === mobileSteps.length - 1);
+  }
+
+  // Initialize mobile carousel
+  initMobileCarousel();
+
+  // ============================================
+  // CONTACT & FOOTER ANIMATIONS
+  // ============================================
+  const contactContent = document.querySelector('.contact-content');
+  const contactFormWrapper = document.querySelector('.contact-form-wrapper');
+  const footer = document.querySelector('footer');
+
+if (contactContent) {
+    gsap.to('.contact-content', {
+      scrollTrigger: {
+        trigger: '#contact',
+        start: 'top 70%',
+        onEnter: () => {
+          const contactTitle = document.querySelector('#contact .text-reveal');
+          if (contactTitle && !contactTitle.dataset.animated) {
+            splitTextToChars(contactTitle);
+            contactTitle.dataset.animated = 'true';
+          }
+        }
+      },
+      opacity: 1,
+      duration: 1.2, // INCREASED for warmth
+      ease: 'power2.out'
+    });
+  }
+
+
+  if (contactFormWrapper) {
+    gsap.to('.contact-form-wrapper', {
+      scrollTrigger: {
+        trigger: '#contact',
+        start: 'top 65%'
+      },
+      opacity: 1,
+      duration: 1,
+      delay: 0.15,
+      ease: 'power3.out'
+    });
+  }
+
+  if (footer) {
+    gsap.to('footer', {
+      scrollTrigger: {
+        trigger: 'footer',
+        start: 'top 85%'
+      },
+      opacity: 1,
+      duration: 0.8,
+      ease: 'power3.out'
+    });
+  }
+
+  // ============================================
+  // PARALLAX SCROLLING
+  // ============================================
+  if (window.innerWidth >= 768) {
+    const heroTitle = document.querySelector('.hero-title');
+    const subtext = document.querySelector('.subtext');
+    
+    if (heroTitle) {
+      gsap.to('.hero-title', {
+        yPercent: -30,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.hero',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+
+    if (subtext) {
+      gsap.to('.subtext', {
+        yPercent: -50,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.hero',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+          invalidateOnRefresh: true
+        }
+      });
+    }
+  }
+
+  // ============================================
+  // MOUSE-FOLLOW GRADIENT
+  // ============================================
+  if (window.innerWidth >= 1024 && !('ontouchstart' in window)) {
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    
+    const updateMousePosition = (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    };
+    
+    const animateGradient = () => {
+      document.documentElement.style.setProperty('--mouse-x', `${mouseX}px`);
+      document.documentElement.style.setProperty('--mouse-y', `${mouseY}px`);
+      requestAnimationFrame(animateGradient);
+    };
+    
+    document.addEventListener('mousemove', updateMousePosition, { passive: true });
+    animateGradient();
+    
+    setTimeout(() => {
+      document.body.classList.add('mouse-active');
+    }, 1000);
+    
+    const clickableElements = document.querySelectorAll('a, button, .browser-window, .process__dot, input, textarea, select');
+    clickableElements.forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        document.body.classList.add('hovering-link');
+      }, { passive: true });
+      el.addEventListener('mouseleave', () => {
+        document.body.classList.remove('hovering-link');
+      }, { passive: true });
+    });
+  }
+
+  // ============================================
+  // CUSTOM CURSOR LOGIC FOR WORK CARDS
+  // ============================================
+  const cursor = document.getElementById('customCursor');
+  const cards = document.querySelectorAll('[data-cursor="true"]');
+
+  if (cursor && cards.length > 0 && window.innerWidth >= 1024) {
+    let mouseX = 0;
+    let mouseY = 0;
+    let cursorX = 0;
+    let cursorY = 0;
+    let isActive = false;
+    
+    const smoothing = 0.2;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      
+      if (isActive) {
+        cursor.style.display = 'flex';
+      }
+    }, { passive: true });
+
+    function animateCursor() {
+      if (isActive) {
+        cursorX += (mouseX - cursorX) * smoothing;
+        cursorY += (mouseY - cursorY) * smoothing;
+        
+        cursor.style.left = cursorX + 'px';
+        cursor.style.top = cursorY + 'px';
+      }
+      
+      requestAnimationFrame(animateCursor);
+    }
+    
+    animateCursor();
+
+    cards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        isActive = true;
+        cursor.style.display = 'flex';
+        cursor.classList.add('active');
+        cursorX = mouseX;
+        cursorY = mouseY;
+      }, { passive: true });
+
+      card.addEventListener('mouseleave', () => {
+        isActive = false;
+        cursor.classList.remove('active');
+        setTimeout(() => {
+          if (!isActive) {
+            cursor.style.display = 'none';
+          }
+        }, 200);
+      }, { passive: true });
+    });
+
+    cursor.style.display = 'none';
+  }
+
+  // ============================================
+  // MAGNETIC CURSOR
+  // ============================================
+  class MagneticCursor {
+    constructor() {
+      this.magneticElements = document.querySelectorAll('.cta-btn, .btn-primary, .btn-secondary, .submit-btn');
+      this.isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      if (!this.isMobile && window.innerWidth >= 1024) this.init();
+    }
+    
+    init() {
+      this.magneticElements.forEach(el => {
+        el.addEventListener('mousemove', (e) => this.magnetize(e, el), { passive: true });
+        el.addEventListener('mouseleave', () => this.reset(el), { passive: true });
+      });
+    }
+    
+    magnetize(e, el) {
+      const rect = el.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const deltaX = e.clientX - centerX;
+      const deltaY = e.clientY - centerY;
+      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+      
+      if (distance < 80) {
+        const strength = Math.min(distance / 80, 1);
+        const moveX = deltaX * 0.15 * strength;
+        const moveY = deltaY * 0.15 * strength;
+        
+        el.style.setProperty('--mag-x', `${moveX}px`);
+        el.style.setProperty('--mag-y', `${moveY}px`);
+      }
+    }
+    
+    reset(el) {
+      el.style.setProperty('--mag-x', '0px');
+      el.style.setProperty('--mag-y', '0px');
+    }
+  }
+
+  new MagneticCursor();
+
+  // ============================================
+  // RIPPLE EFFECT
+  // ============================================
+  function createRipple(event, element) {
+    const ripple = document.createElement('span');
+    const rect = element.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = event.clientX - rect.left - size / 2;
+    const y = event.clientY - rect.top - size / 2;
+    
+    ripple.className = 'ripple';
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = x + 'px';
+    ripple.style.top = y + 'px';
+    
+    element.appendChild(ripple);
+    
+    setTimeout(() => ripple.remove(), 600);
+  }
+
+  document.querySelectorAll('.cta-btn, .btn-primary, .btn-secondary, .submit-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      createRipple(e, this);
+    });
+  });
+
+  // ============================================
+  // TOUCH FEEDBACK
+  // ============================================
+  if ('ontouchstart' in window) {
+    const touchElements = document.querySelectorAll('.btn-primary, .btn-secondary, .cta-btn, .submit-btn, .nav-links a');
+    
+    touchElements.forEach(el => {
+      el.addEventListener('touchstart', function() {
+        this.style.transform = 'scale(0.98)';
+      }, { passive: true });
+      
+      el.addEventListener('touchend', function() {
+        setTimeout(() => {
+          this.style.transform = '';
+        }, 100);
+      }, { passive: true });
+    });
+  }
+
+  // ============================================
+  // FORM FUNCTIONALITY
+  // ============================================
+  // ============================================
+// FORM FUNCTIONALITY - FIXED FOR FORMSPREE
+// ============================================
+const form = document.getElementById('contactForm');
+
+if (form) {
+  const inputs = form.querySelectorAll('input, textarea');
+
+  // Floating label functionality
+  inputs.forEach(input => {
+    const label = input.previousElementSibling;
+    
+    if (label && input.value) {
+      label.classList.add('floating');
+    }
+    
+    input.addEventListener('focus', () => {
+      if (label) label.classList.add('floating');
+    });
+    
+    input.addEventListener('blur', () => {
+      if (label && !input.value) {
+        label.classList.remove('floating');
+      }
+    });
+  });
+
+  // Form submit handler - REMOVED e.preventDefault()
+  form.addEventListener('submit', (e) => {
+    const btn = form.querySelector('.submit-btn');
+    if (!btn) return;
+    
+    // Just show loading state, let Formspree handle the actual submission
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    
+    // Note: The form will now submit to Formspree naturally
+    // Formspree will redirect to their confirmation page or your custom page
+  });
+}
+  // ============================================
+  // SMOOTH SCROLL
+  // ============================================
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = anchor.getAttribute('href');
+      const target = document.querySelector(targetId);
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+
+
+ // Reinitialize split text on resize
+      document.querySelectorAll('[data-split-text="true"]').forEach(el => {
+        if (el.dataset.splitProcessed) {
+          const originalText = el.dataset.originalText;
+          el.innerHTML = originalText;
+          el.dataset.splitProcessed = '';
+          
+          // Kill old ScrollTriggers for this element
+          ScrollTrigger.getAll().forEach(trigger => {
+            if (trigger.vars.trigger === el.closest('section')) {
+              trigger.kill();
+            }
+          });
+          
+          splitIntoLines(el);
+        }
+      });
+
+  // ============================================
+  // SCROLL TRIGGER REFRESH ON RESIZE
+  // ============================================
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      ScrollTrigger.refresh();
+      
+      // Reinitialize mobile carousel on orientation change
+      if (window.innerWidth < 1280) {
+        const mobileContainer = document.getElementById('mobileCardsContainer');
+        if (mobileContainer && mobileContainer.children.length === 0) {
+          initMobileCarousel();
+        }
+      }
+    }, 250);
+  }, { passive: true });
+
+});
