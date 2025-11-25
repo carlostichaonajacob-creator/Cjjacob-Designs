@@ -6,7 +6,7 @@
 
 
 // ============================================
-// TEXT REVEAL ANIMATION
+// TEXT REVEAL ANIMATION - WORD-AWARE VERSION
 // ============================================
 function splitTextToChars(element) {
   const text = element.getAttribute('data-text');
@@ -19,74 +19,86 @@ function splitTextToChars(element) {
   
   element.innerHTML = '';
   
-  text.split('').forEach((char, index) => {
-    const span = document.createElement('span');
-    span.classList.add('char');
+  // Split into WORDS first to preserve word boundaries
+  const words = text.split(' ');
+  let charIndex = 0;
+  
+  words.forEach((word, wordIndex) => {
+    // Create word wrapper - THIS prevents mid-word line breaks
+    const wordWrapper = document.createElement('span');
+    wordWrapper.classList.add('word-wrapper');
     
-    if (char === ' ') {
-      span.classList.add('space');
-      span.innerHTML = '&nbsp;';
-    } else {
+    // Split each word into characters
+    word.split('').forEach((char) => {
+      const span = document.createElement('span');
+      span.classList.add('char');
       span.textContent = char;
-    }
+      
+      // Dynamic character delay based on parent element
+      const isAboutSection = element.closest('.about') !== null;
+      const delayMultiplier = isAboutSection ? 0.05 : 0.03;
+      const charDelay = baseDelay + (charIndex * delayMultiplier);
+      span.style.animationDelay = `${charDelay}s`;
+      
+      wordWrapper.appendChild(span);
+      charIndex++;
+    });
     
-    // Dynamic character delay based on parent element
-    // About section gets slower reveal (0.05s), others use default (0.03s)
-    const isAboutSection = element.closest('.about') !== null;
-    const delayMultiplier = isAboutSection ? 0.05 : 0.03;
-    const charDelay = baseDelay + (index * delayMultiplier);
-    span.style.animationDelay = `${charDelay}s`;
-    element.appendChild(span);
+    element.appendChild(wordWrapper);
+    
+    // Add space between words (except after last word)
+    if (wordIndex < words.length - 1) {
+      const space = document.createElement('span');
+      space.classList.add('word-space');
+      space.innerHTML = '&nbsp;';
+      element.appendChild(space);
+    }
   });
 }
 
-
 // ============================================
-// TEXT SPLIT LINE ANIMATION - NEW
+// LINE-BY-LINE REVEAL - REFERENCE IMPLEMENTATION
 // ============================================
 /**
- * Splits text into animated lines (for paragraphs/subtitles)
+ * Splits text into animated lines using reference method
  * @param {HTMLElement} element - The element to split
  */
-function splitTextToLines(element) {
+function splitIntoLines(element) {
   if (!element || element.dataset.splitProcessed) return;
   
   const text = element.textContent.trim();
   if (!text) return;
   
-  // Store original text
-  element.dataset.originalText = text;
+  const words = text.split(/\s+/);
   element.innerHTML = '';
   
-  // Create measuring element
-  const styles = window.getComputedStyle(element);
-  const measuringEl = document.createElement('div');
-  measuringEl.style.cssText = `
+  // Store original text for resize handling
+  element.dataset.originalText = text;
+  
+  // Create temporary element to measure line breaks
+  const temp = document.createElement('div');
+  temp.style.cssText = `
     position: absolute;
     visibility: hidden;
     width: ${element.offsetWidth}px;
-    font-size: ${styles.fontSize};
-    font-family: ${styles.fontFamily};
-    font-weight: ${styles.fontWeight};
-    line-height: ${styles.lineHeight};
-    letter-spacing: ${styles.letterSpacing};
-    text-align: ${styles.textAlign};
-    white-space: normal;
-    word-wrap: break-word;
+    font-size: ${window.getComputedStyle(element).fontSize};
+    font-family: ${window.getComputedStyle(element).fontFamily};
+    font-weight: ${window.getComputedStyle(element).fontWeight};
+    line-height: ${window.getComputedStyle(element).lineHeight};
+    letter-spacing: ${window.getComputedStyle(element).letterSpacing};
+    text-align: ${window.getComputedStyle(element).textAlign};
   `;
-  document.body.appendChild(measuringEl);
+  document.body.appendChild(temp);
   
-  // Split into lines
-  const words = text.split(/\s+/).filter(w => w.length > 0);
-  const lines = [];
+  let lines = [];
   let currentLine = [];
   let lastTop = null;
   
-  words.forEach((word, index) => {
+  words.forEach((word, i) => {
     const span = document.createElement('span');
     span.textContent = word + ' ';
     span.style.display = 'inline';
-    measuringEl.appendChild(span);
+    temp.appendChild(span);
     
     const rect = span.getBoundingClientRect();
     const currentTop = rect.top;
@@ -100,63 +112,56 @@ function splitTextToLines(element) {
     
     lastTop = currentTop;
     
-    if (index === words.length - 1) {
+    if (i === words.length - 1) {
       lines.push(currentLine.join(' '));
     }
   });
   
-  document.body.removeChild(measuringEl);
+  document.body.removeChild(temp);
   
-  // Create line elements
-  const fragment = document.createDocumentFragment();
+  // Build the HTML structure with line masking
   lines.forEach(lineText => {
     const lineWrapper = document.createElement('div');
-    lineWrapper.className = 'split-text-line';
+    lineWrapper.className = 'line';
     
     const lineInner = document.createElement('div');
-    lineInner.className = 'split-text-line-inner';
+    lineInner.className = 'line-inner';
     lineInner.textContent = lineText;
     
     lineWrapper.appendChild(lineInner);
-    fragment.appendChild(lineWrapper);
+    element.appendChild(lineWrapper);
   });
   
-  element.appendChild(fragment);
   element.dataset.splitProcessed = 'true';
+  return element.querySelectorAll('.line');
 }
 
+// ============================================
+// ANIMATE LINES - REFERENCE IMPLEMENTATION
+// ============================================
 /**
- * Animates split text lines with stagger
+ * Animates lines with reference method (per-line ScrollTrigger)
  * @param {NodeList} lines - The line elements to animate
- * @param {Object} trigger - The trigger element or selector
- * @param {Number} startDelay - Initial delay before animation starts
+ * @param {String|Element} trigger - The trigger element
+ * @param {Number} startDelay - Initial delay (optional, for sequencing)
  */
-/**
- * Animates split text lines with stagger
- * @param {NodeList} lines - The line elements to animate
- * @param {Object} trigger - The trigger element or selector
- * @param {Number} startDelay - Initial delay before animation starts
- * @param {Number} duration - Duration of each line animation (default: 0.8s)
- * @param {Number} stagger - Delay between each line (default: 0.15s)
- * @param {String} ease - Easing function (default: 'power3.out')
- */
-function animateSplitLines(lines, trigger, startDelay = 0, duration = 0.8, stagger = 0.15, ease = 'power3.out') {
+function setupLineAnimation(lines, trigger, startDelay = 0) {
   if (!lines || lines.length === 0) return;
   
   lines.forEach((line, index) => {
-    const lineInner = line.querySelector('.split-text-line-inner');
+    const lineInner = line.querySelector('.line-inner');
     if (!lineInner) return;
     
     gsap.to(lineInner, {
       y: 0,
-      opacity: 1,
-      duration: duration,
-      delay: startDelay + (index * stagger),
-      ease: ease,
+      duration: 1.2,
+      delay: startDelay,
+      ease: "power3.out",
       scrollTrigger: {
         trigger: trigger,
-        start: 'top 75%',
-        toggleActions: 'play none none none'
+        start: "top 85%",
+        end: "top 65%",
+        toggleActions: "play none none none"
       }
     });
   });
@@ -275,32 +280,35 @@ document.addEventListener('DOMContentLoaded', function() {
   // ============================================
   // TEXT SPLIT LINE ANIMATIONS - Initialize all elements
   // ============================================
+
   
-  // Hero subtext - dramatic line-by-line reveal
-  const subtext = document.querySelector('.subtext[data-split-text="true"]');
+// ============================================
+  // HERO SUBTEXT - Line-by-line reveal after title
+  // ============================================
+const subtext = document.querySelector('.subtext[data-split-text="true"]');
   if (subtext) {
     document.fonts.ready.then(() => {
-      splitTextToLines(subtext);
-      const subtextLines = subtext.querySelectorAll('.split-text-line');
-      // Start at 2.8s (after title starts + 60% complete)
-      // Duration: 1.0s per line, Stagger: 0.25s between lines
-      // This creates a "painting" effect
-      animateSplitLines(subtextLines, '.hero', 2.8, 1.0, 0.25, 'power2.out');
+      splitIntoLines(subtext);
+      const subtextLines = subtext.querySelectorAll('.line');
+      
+      // Wait for hero title character reveal to finish (~2.8s), then start
+      setupLineAnimation(subtextLines, '.hero', 2.8);
     });
   }
   
-// About paragraphs - SLOW & DRAMATIC
-  const aboutTexts = document.querySelectorAll('.about__text[data-split-text="true"]');
+// ============================================
+  // ABOUT PARAGRAPHS - Line-by-line after title
+  // ============================================
+const aboutTexts = document.querySelectorAll('.about__text[data-split-text="true"]');
   if (aboutTexts.length > 0) {
     document.fonts.ready.then(() => {
       aboutTexts.forEach((text, index) => {
-        splitTextToLines(text);
-        const lines = text.querySelectorAll('.split-text-line');
-        // SLOW TIMING: 1.4s duration per line, 0.35s stagger between lines
-        // Each paragraph starts 0.5s after previous completes
-        // This creates a "being written" effect that's impossible to miss
-        const paragraphDelay = 0.5 + (index * 0.8); // Stagger paragraphs significantly
-        animateSplitLines(lines, '.about', paragraphDelay, 1.4, 0.35, 'power2.out');
+        splitIntoLines(text);
+        const lines = text.querySelectorAll('.line');
+        
+        // Wait for about title to finish (~0.8s), then stagger paragraphs
+        const paragraphDelay = 1.0 + (index * 0.6);
+        setupLineAnimation(lines, '.about', paragraphDelay);
       });
     });
   }
@@ -309,28 +317,48 @@ document.addEventListener('DOMContentLoaded', function() {
     // About section gets slower reveal (0.05s), others use default (0.03s)
 
   
-// Process subtitle - clear and methodical
-  const processSubtitle = document.querySelector('.process__subtitle[data-split-text="true"]');
+// ============================================
+  // PROCESS SUBTITLE - Line-by-line after title
+  // ============================================
+const processSubtitle = document.querySelector('.process__subtitle[data-split-text="true"]');
   if (processSubtitle) {
     document.fonts.ready.then(() => {
-      splitTextToLines(processSubtitle);
-      const lines = processSubtitle.querySelectorAll('.split-text-line');
-      // 1.0s duration, 0.25s stagger - professional reveal
-      animateSplitLines(lines, '.process', 0.2, 1.0, 0.25, 'power2.out');
-    });
-  }
-  
-// Contact subtitle - warm and inviting
-  const contactSubtitle = document.querySelector('.contact-subtitle[data-split-text="true"]');
-  if (contactSubtitle) {
-    document.fonts.ready.then(() => {
-      splitTextToLines(contactSubtitle);
-      const lines = contactSubtitle.querySelectorAll('.split-text-line');
-      // 1.2s duration, 0.3s stagger - slow, welcoming reveal
-      animateSplitLines(lines, '#contact', 0.2, 1.2, 0.3, 'power2.out');
+      splitIntoLines(processSubtitle);
+      const lines = processSubtitle.querySelectorAll('.line');
+      
+      // Wait for process title to finish (~1.0s), then start
+      setupLineAnimation(lines, '.process', 1.2);
     });
   }
 
+
+// ============================================
+  // WORK SUBTITLE - Line-by-line after title
+  // ============================================
+const workSubtitle = document.querySelector('.work-header__subtitle[data-split-text="true"]');
+  if (workSubtitle) {
+    document.fonts.ready.then(() => {
+      splitIntoLines(workSubtitle);
+      const lines = workSubtitle.querySelectorAll('.line');
+      
+      // Wait for work title to finish (~1.0s), then start
+      setupLineAnimation(lines, '.work-section', 1.2);
+    });
+  }
+  
+// ============================================
+  // CONTACT SUBTITLE - Line-by-line after title
+  // ============================================
+const contactSubtitle = document.querySelector('.contact-subtitle[data-split-text="true"]');
+  if (contactSubtitle) {
+    document.fonts.ready.then(() => {
+      splitIntoLines(contactSubtitle);
+      const lines = contactSubtitle.querySelectorAll('.line');
+      
+      // Wait for contact title to finish (~1.2s), then start
+      setupLineAnimation(lines, '#contact', 1.4);
+    });
+  }
 
   // ============================================
   // DARK MODE TRIGGERS - CONSOLIDATED
@@ -1088,13 +1116,21 @@ if (form) {
   });
 
 
-  // Reinitialize split text on resize
+ // Reinitialize split text on resize
       document.querySelectorAll('[data-split-text="true"]').forEach(el => {
         if (el.dataset.splitProcessed) {
           const originalText = el.dataset.originalText;
           el.innerHTML = originalText;
           el.dataset.splitProcessed = '';
-          splitTextToLines(el);
+          
+          // Kill old ScrollTriggers for this element
+          ScrollTrigger.getAll().forEach(trigger => {
+            if (trigger.vars.trigger === el.closest('section')) {
+              trigger.kill();
+            }
+          });
+          
+          splitIntoLines(el);
         }
       });
 
