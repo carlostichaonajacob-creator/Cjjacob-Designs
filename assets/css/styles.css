@@ -119,7 +119,7 @@ h1, h2, h3 {
 
 
 /* ============================================ */
-/* TEXT REVEAL ANIMATION */
+/* TEXT REVEAL ANIMATION - TITLES ONLY */
 /* ============================================ */
 .text-reveal-wrapper {
   overflow: hidden;
@@ -139,7 +139,15 @@ h1, h2, h3 {
   animation: slideDownChar 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
 }
 
-.text-reveal .space {
+/* Word wrapper keeps characters together */
+.text-reveal .word-wrapper {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Space between words */
+.text-reveal .word-space {
+  display: inline-block;
   width: 0.3em;
 }
 
@@ -150,12 +158,39 @@ h1, h2, h3 {
   }
 }
 
+/* ============================================ */
+/* LINE-BY-LINE REVEAL ANIMATION - REFERENCE EFFECT */
+/* ============================================ */
+.line {
+  display: block;
+  overflow: hidden;
+  position: relative;
+  margin: 0.2em 0;
+}
+
+.line-inner {
+  display: block;
+  transform: translateY(-110%);
+  will-change: transform;
+}
+
+.line.animated .line-inner {
+  transform: translateY(0);
+}
+
 /* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
   .text-reveal .char {
     animation: none !important;
     transform: none !important;
     opacity: 1 !important;
+  }
+}
+
+/* Adjust line spacing for different screen sizes */
+@media (max-width: 767px) {
+  .line {
+    margin: 0.15em 0;
   }
 }
 
@@ -261,6 +296,14 @@ body.dark-mode .navbar {
   }
 }
 
+
+/* 🔧 NEW: Adjust navbar spacing when CTA + hamburger coexist */
+@media (min-width: 480px) and (max-width: 1279px) {
+  .navbar-inner {
+    padding: 0 20px; /* Tighter padding to fit elements */
+  }
+}
+
 .navbar-inner {
   display: flex;
   justify-content: space-between;
@@ -268,6 +311,43 @@ body.dark-mode .navbar {
   height: 100%;
   padding: 0 28px;
 }
+
+
+
+/* 🔧 NEW: Navbar layout adjustment for logo left, CTA+hamburger right */
+@media (min-width: 480px) and (max-width: 1279px) {
+  .navbar-inner {
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between; /* Logo left, other elements right */
+    align-items: center;
+  }
+  
+  /* Create a wrapper for CTA + hamburger on the right */
+  .desktop-nav {
+    display: flex !important;
+    align-items: center;
+    gap: 16px; /* Space between CTA and hamburger */
+    margin-left: auto; /* Push to right side */
+  }
+  
+  .hamburger {
+    margin-left: 0; /* Remove any left margin */
+  }
+}
+
+/* 🔧 NEW: Below 480px - Only hamburger on right */
+@media (max-width: 479px) {
+  .navbar-inner {
+    padding: 0 20px;
+  }
+  
+  .hamburger {
+    margin-left: auto; /* Push hamburger to far right */
+  }
+}
+
+
 
 /* ============================================ */
 /* LOGO */
@@ -351,6 +431,16 @@ body.dark-mode .hamburger span {
 /* ============================================ */
 /* NAV LINKS */
 /* ============================================ */
+
+.left-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 150px ;
+  gap: 10px;
+}
+
+
 .nav-links {
   display: flex;
   align-items: center;
@@ -394,9 +484,27 @@ body.dark-mode .nav-links a {
   opacity: 1;
 }
 
+
+
 @media (min-width: 1024px) and (max-width: 1439px) {
   .nav-links .cta-btn {
     padding: 13px 30px;
+  }
+}
+
+/* 🔧 NEW: Adjust CTA size at 480px-1023px to fit with hamburger */
+@media (min-width: 480px) and (max-width: 1023px) {
+  .nav-links .cta-btn {
+    padding: 10px 20px; /* Smaller to fit */
+    font-size: 13px;
+  }
+}
+
+
+/* 🔧 NEW: Hide CTA below 480px */
+@media (max-width: 479px) {
+  .nav-links .cta-btn {
+    display: none;
   }
 }
 
@@ -439,7 +547,7 @@ body.dark-mode .mobile-menu-overlay {
 .mobile-nav {
   flex-direction: column;
   gap: 32px;
-  align-items: center;
+  align-items: start;
   text-align: center;
   width: 100%;
   padding: 0 40px;
@@ -580,8 +688,8 @@ body.dark-mode .hero-title {
   }
   
   .hero-title {
-    font-size: 52px;
-    line-height: 1.2;
+    font-size: 48px; /* 🔧 REDUCED from 52px */
+    line-height: 1.25; /* 🔧 INCREASED from 1.2 */
     margin-bottom: 28px;
   }
 }
@@ -592,8 +700,8 @@ body.dark-mode .hero-title {
   }
   
   .hero-title {
-    font-size: 44px;
-    line-height: 1.25;
+    font-size: 40px; /* 🔧 REDUCED from 44px for better word wrapping */
+    line-height: 1.3; /* 🔧 INCREASED from 1.25 */
     letter-spacing: 0;
     margin-bottom: 24px;
   }
@@ -604,7 +712,7 @@ body.dark-mode .hero-title {
   line-height: 1.8;
   color: var(--dark-grey);
   max-width: 660px;
-  margin: 0 auto 64px;
+  margin: 0 0 64px 0; /* 🔧 CHANGED: Removes centering, keeps left-aligned */
   opacity: 0;
   transform: translateY(30px);
 }
@@ -618,7 +726,7 @@ body.dark-mode .subtext {
     font-size: 20px;
     line-height: 1.75;
     max-width: 600px;
-    margin-bottom: 56px;
+    margin: 0 0 56px 0; /* 🔧 EXPLICIT: All margins defined */
   }
 }
 
@@ -627,7 +735,7 @@ body.dark-mode .subtext {
     font-size: 18px;
     line-height: 1.7;
     max-width: 560px;
-    margin-bottom: 48px;
+    margin: 0 0 48px 0; /* 🔧 EXPLICIT */
   }
 }
 
@@ -636,7 +744,7 @@ body.dark-mode .subtext {
     font-size: 17px;
     line-height: 1.65;
     max-width: 100%;
-    margin-bottom: 40px;
+    margin: 0 0 40px 0; /* 🔧 EXPLICIT */
   }
 }
 
@@ -644,7 +752,7 @@ body.dark-mode .subtext {
   .subtext {
     font-size: 16px;
     line-height: 1.6;
-    margin-bottom: 36px;
+    margin: 0 0 36px 0; /* 🔧 EXPLICIT */
   }
 }
 
@@ -722,11 +830,27 @@ body.dark-mode .subtext {
   }
 }
 
+/* 🔧 NEW: Keep buttons horizontal at 480px-767px */
+@media (min-width: 480px) and (max-width: 767px) {
+  .hero-ctas {
+    gap: 16px; /* Keep horizontal layout */
+    justify-content: flex-start; /* Align to left */
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    padding: 16px 32px;
+    font-size: 14px;
+    border-radius: 10px;
+  }
+}
+
+/* 🔧 UPDATED: Stack buttons at 767px and below, centered, full width */
 @media (max-width: 767px) {
   .hero-ctas {
-    flex-direction: column;
+    flex-direction: column; /* Stack vertically */
     gap: 16px;
-    align-items: center;
+    align-items: center; /* Center the buttons */
     width: 100%;
   }
   
@@ -735,7 +859,7 @@ body.dark-mode .subtext {
     padding: 16px 32px;
     font-size: 14px;
     border-radius: 10px;
-    width: 100%;
+    width: 100%; /* Full width */
     max-width: 400px;
     text-align: center;
   }
@@ -839,10 +963,18 @@ body.dark-mode .about__title {
   box-shadow: 0 20px 50px rgba(0, 49, 128, 0.12);
 }
 
+.about_body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .about__text {
   font-size: 18px;
   color: var(--dark-grey);
   margin-bottom: 32px;
+  text-align: start;
 }
 
 body.dark-mode .about__text {
@@ -2489,27 +2621,112 @@ body.dark-mode .footer-contact-item {
   transform: rotate(8deg) scale(1.08);
 }
 
-.footer-bottom {
-  padding-top: 40px;
-  border-top: 1px solid #E2E2DF;
-  text-align: center;
+/* ============================================ */
+/* FOOTER LEGAL LINKS */
+/* ============================================ */
+.footer-legal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+  font-size: 13px;
+}
+
+.footer-legal a {
   color: #999;
-  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  position: relative;
 }
 
-body.dark-mode .footer-bottom {
-  border-top-color: #222;
+.footer-legal a:hover {
+  color: var(--signature-blue);
 }
 
-@media (max-width: 1279px) {
+.footer-legal a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--signature-blue);
+  transition: width 0.3s ease;
+}
+
+.footer-legal a:hover::after {
+  width: 100%;
+}
+
+body.dark-mode .footer-legal a {
+  color: #999;
+}
+
+body.dark-mode .footer-legal a:hover {
+  color: var(--signature-blue);
+}
+
+.footer-legal span {
+  color: #666;
+  font-weight: 300;
+}
+
+body.dark-mode .footer-legal span {
+  color: #555;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .footer-bottom {
+    padding-top: 32px;
+  }
+  
+  .footer-legal {
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  
+  .footer-legal span {
+    display: none; /* Hide bullet separator on mobile */
+  }
+}
+
+@media (max-width: 479px) {
+  .footer-bottom p {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  
+  .footer-legal {
+    font-size: 12px;
+  }
+}
+
+/* 🔧 UPDATED: Only hide full desktop nav below 1280px, but keep CTA */
+@media (min-width: 480px) and (max-width: 1279px) {
+  .desktop-nav li:not(:last-child) {
+    display: none; /* Hide regular nav links */
+  }
+  
   .desktop-nav {
-    display: none !important;
+    display: flex !important; /* Keep container visible for CTA */
+    gap: 0; /* Remove gap since only CTA shows */
   }
   
   .footer-right {
     gap: 50px;
   }
 }
+
+/* 🔧 NEW: Hide entire desktop nav below 480px */
+@media (max-width: 479px) {
+  .desktop-nav {
+    display: none !important;
+  }
+}
+
 
 @media (max-width: 767px) {
   .footer-grid {
@@ -2526,6 +2743,12 @@ body.dark-mode .footer-bottom {
   .footer-contact-item:hover {
     transform: none;
   }
+}
+
+.footer-legal a i {
+  margin-right: 6px;
+  font-size: 11px;
+  opacity: 0.7;
 }
 
 /* ============================================ */
