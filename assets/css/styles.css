@@ -3019,3 +3019,30 @@ body.is-ios.dark-mode .process__step {
 }
 */
 
+
+/* iOS PERFORMANCE OPTIMIZATIONS */
+body.is-ios .navbar,
+body.is-ios .mobile-card-inner,
+body.is-ios .process__step {
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+body.is-ios .mobile-card {
+  transform-style: flat !important;
+  transition: all 0.5s ease !important;
+}
+
+body.is-ios .mobile-card.active {
+  transform: translateX(0) scale(1) !important;
+}
+
+body.is-ios .mobile-card.next {
+  transform: translateX(100%) scale(0.9) !important;
+}
+
+body.is-ios .mobile-card.prev {
+  transform: translateX(-100%) scale(0.9) !important;
+}
+
+
