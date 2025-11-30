@@ -1,42 +1,60 @@
-
-    // ============================================
-// GSAP SETUP new upadated code
+// ============================================
+// OPTIMIZED JS FOR iOS PERFORMANCE
 // ============================================
 
-
+// ============================================
+// DEVICE DETECTION
+// ============================================
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ============================================
-// TEXT REVEAL ANIMATION - WORD-AWARE VERSION
+// PERFORMANCE CONFIG
+// ============================================
+const performanceConfig = {
+  enableLenis: !isIOS, // Disable Lenis on iOS
+  enableBackdropFilter: !isIOS, // Reduce backdrop-filter on iOS
+  enableMouseGradient: !isMobile, // No mouse effects on mobile
+  enable3DTransforms: !isIOS, // Use 2D on iOS
+  enableHeavyAnimations: !isIOS && !prefersReducedMotion,
+  textAnimationDelay: isIOS ? 0.01 : 0.03, // Faster on iOS
+  scrollTriggerMarkers: false
+};
+
+// ============================================
+// OPTIMIZED TEXT REVEAL - LIGHTER FOR iOS
 // ============================================
 function splitTextToChars(element) {
   const text = element.getAttribute('data-text');
   const baseDelay = parseFloat(element.getAttribute('data-delay')) || 0;
   
-  // Store original text as backup
   if (!element.dataset.originalText) {
     element.dataset.originalText = element.textContent;
   }
   
-  element.innerHTML = '';
+  // Skip animation on reduced motion or iOS with many characters
+  if (prefersReducedMotion || (isIOS && text.length > 100)) {
+    element.textContent = text;
+    element.style.opacity = '1';
+    return;
+  }
   
-  // Split into WORDS first to preserve word boundaries
+  element.innerHTML = '';
   const words = text.split(' ');
   let charIndex = 0;
   
   words.forEach((word, wordIndex) => {
-    // Create word wrapper - THIS prevents mid-word line breaks
     const wordWrapper = document.createElement('span');
     wordWrapper.classList.add('word-wrapper');
     
-    // Split each word into characters
     word.split('').forEach((char) => {
       const span = document.createElement('span');
       span.classList.add('char');
       span.textContent = char;
       
-      // Dynamic character delay based on parent element
       const isAboutSection = element.closest('.about') !== null;
-      const delayMultiplier = isAboutSection ? 0.05 : 0.03;
+      const delayMultiplier = performanceConfig.textAnimationDelay;
       const charDelay = baseDelay + (charIndex * delayMultiplier);
       span.style.animationDelay = `${charDelay}s`;
       
@@ -46,7 +64,6 @@ function splitTextToChars(element) {
     
     element.appendChild(wordWrapper);
     
-    // Add space between words (except after last word)
     if (wordIndex < words.length - 1) {
       const space = document.createElement('span');
       space.classList.add('word-space');
@@ -57,36 +74,36 @@ function splitTextToChars(element) {
 }
 
 // ============================================
-// LINE-BY-LINE REVEAL - REFERENCE IMPLEMENTATION
+// OPTIMIZED LINE-BY-LINE REVEAL
 // ============================================
-/**
- * Splits text into animated lines using reference method
- * @param {HTMLElement} element - The element to split
- */
 function splitIntoLines(element) {
   if (!element || element.dataset.splitProcessed) return;
   
   const text = element.textContent.trim();
   if (!text) return;
   
+  // Simplified version for iOS
+  if (isIOS) {
+    element.style.opacity = '1';
+    return;
+  }
+  
   const words = text.split(/\s+/);
   element.innerHTML = '';
-  
-  // Store original text for resize handling
   element.dataset.originalText = text;
   
-  // Create temporary element to measure line breaks
   const temp = document.createElement('div');
+  const styles = window.getComputedStyle(element);
   temp.style.cssText = `
     position: absolute;
     visibility: hidden;
     width: ${element.offsetWidth}px;
-    font-size: ${window.getComputedStyle(element).fontSize};
-    font-family: ${window.getComputedStyle(element).fontFamily};
-    font-weight: ${window.getComputedStyle(element).fontWeight};
-    line-height: ${window.getComputedStyle(element).lineHeight};
-    letter-spacing: ${window.getComputedStyle(element).letterSpacing};
-    text-align: ${window.getComputedStyle(element).textAlign};
+    font-size: ${styles.fontSize};
+    font-family: ${styles.fontFamily};
+    font-weight: ${styles.fontWeight};
+    line-height: ${styles.lineHeight};
+    letter-spacing: ${styles.letterSpacing};
+    text-align: ${styles.textAlign};
   `;
   document.body.appendChild(temp);
   
@@ -119,7 +136,6 @@ function splitIntoLines(element) {
   
   document.body.removeChild(temp);
   
-  // Build the HTML structure with line masking
   lines.forEach(lineText => {
     const lineWrapper = document.createElement('div');
     lineWrapper.className = 'line';
@@ -137,70 +153,92 @@ function splitIntoLines(element) {
 }
 
 // ============================================
-// ANIMATE LINES - REFERENCE IMPLEMENTATION
+// OPTIMIZED LINE ANIMATION
 // ============================================
-/**
- * Animates lines with reference method (per-line ScrollTrigger)
- * @param {NodeList} lines - The line elements to animate
- * @param {String|Element} trigger - The trigger element
- * @param {Number} startDelay - Initial delay (optional, for sequencing)
- */
 function setupLineAnimation(lines, trigger, startDelay = 0) {
   if (!lines || lines.length === 0) return;
   
-  lines.forEach((line, index) => {
+  lines.forEach((line) => {
     const lineInner = line.querySelector('.line-inner');
     if (!lineInner) return;
     
     gsap.to(lineInner, {
       y: 0,
-      duration: 1.2,
+      duration: isIOS ? 0.8 : 1.2,
       delay: startDelay,
       ease: "power3.out",
       scrollTrigger: {
         trigger: trigger,
         start: "top 85%",
         end: "top 65%",
-        toggleActions: "play none none none"
+        toggleActions: "play none none none",
+        // Reduce calculations on iOS
+        fastScrollEnd: isIOS,
+        preventOverlaps: isIOS
       }
     });
   });
 }
 
+// ============================================
+// DEBOUNCED RESIZE HANDLER
+// ============================================
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 
 // ============================================
-// SINGLE DOMContentLoaded - Everything inside ONE listener
+// MAIN INITIALIZATION
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {
   gsap.registerPlugin(ScrollTrigger);
-
-  // ============================================
-  // LENIS SMOOTH SCROLL - "GREASED WHEEL" EFFECT
-  // ============================================
-  const lenis = new Lenis({
-    duration: 1.2,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    smooth: true,
-    smoothTouch: false,
-    touchMultiplier: 2,
-    infinite: false
+  
+  // Configure ScrollTrigger for better iOS performance
+  ScrollTrigger.config({
+    limitCallbacks: true,
+    syncInterval: isIOS ? 150 : 50 // Less frequent updates on iOS
   });
 
-  // Animation loop - keeps Lenis running
-  function raf(time) {
-    lenis.raf(time);
+  // ============================================
+  // LENIS SMOOTH SCROLL - DISABLED ON iOS
+  // ============================================
+  let lenis = null;
+  
+  if (performanceConfig.enableLenis) {
+    lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smooth: true,
+      smoothTouch: false,
+      touchMultiplier: 2,
+      infinite: false
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
     requestAnimationFrame(raf);
+
+    lenis.on('scroll', ScrollTrigger.update);
+
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+
+    gsap.ticker.lagSmoothing(0);
+  } else {
+    // iOS: Use native scroll with ScrollTrigger only
+    ScrollTrigger.normalizeScroll(true);
   }
-  requestAnimationFrame(raf);
-
-  // CRITICAL: Sync Lenis with GSAP ScrollTrigger
-  lenis.on('scroll', ScrollTrigger.update);
-
-  gsap.ticker.add((time) => {
-    lenis.raf(time * 1000);
-  });
-
-  gsap.ticker.lagSmoothing(0);
 
   // ============================================
   // SMOOTH SCROLL FOR ANCHOR LINKS
@@ -212,11 +250,19 @@ document.addEventListener('DOMContentLoaded', function() {
       const target = document.querySelector(targetId);
       
       if (target) {
-        lenis.scrollTo(target, {
-          offset: 0,
-          duration: 1.5,
-          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
-        });
+        if (lenis) {
+          lenis.scrollTo(target, {
+            offset: 0,
+            duration: 1.5,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+          });
+        } else {
+          // Native smooth scroll for iOS
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
       }
     });
   });
@@ -224,11 +270,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // ============================================
   // MOBILE CHECK
   // ============================================
-  const isMobile = () => window.innerWidth < 768;
-  let cachedIsMobile = isMobile();
+  const checkMobile = () => window.innerWidth < 768;
+  let cachedIsMobile = checkMobile();
 
   window.addEventListener('resize', () => {
-    cachedIsMobile = isMobile();
+    cachedIsMobile = checkMobile();
   }, { passive: true });
 
   // ============================================
@@ -267,210 +313,129 @@ document.addEventListener('DOMContentLoaded', function() {
     ScrollTrigger.create({
       start: 'top -40',
       onEnter: () => navbar.classList.add('scrolled'),
-      onLeaveBack: () => navbar.classList.remove('scrolled')
-    });
-  }
-
-  // ... ALL YOUR OTHER CODE CONTINUES HERE ...
-  // (Everything from your original file goes inside this single DOMContentLoaded)
-
-}); // <-- Single closing bracket for DOMContentLoaded
-
-
-document.addEventListener('DOMContentLoaded', function() {
-  gsap.registerPlugin(ScrollTrigger);
-
-  const isMobile = () => window.innerWidth < 768;
-  let cachedIsMobile = isMobile();
-
-  // Update cached value on resize
-  window.addEventListener('resize', () => {
-    cachedIsMobile = isMobile();
-  }, { passive: true });
-
-  // ============================================
-  // HAMBURGER MENU TOGGLE
-  // ============================================
-  const hamburger = document.querySelector('.hamburger');
-  const mobileOverlay = document.querySelector('.mobile-menu-overlay');
-  const mobileLinks = document.querySelectorAll('.mobile-nav a');
-  let menuOpen = false;
-
-  if (hamburger && mobileOverlay) {
-    hamburger.addEventListener('click', () => {
-      menuOpen = !menuOpen;
-      hamburger.classList.toggle('active');
-      hamburger.setAttribute('aria-expanded', menuOpen);
-      mobileOverlay.classList.toggle('active');
-      document.body.style.overflow = menuOpen ? 'hidden' : '';
-    });
-
-    mobileLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        menuOpen = false;
-        hamburger.classList.remove('active');
-        hamburger.setAttribute('aria-expanded', false);
-        mobileOverlay.classList.remove('active');
-        document.body.style.overflow = '';
-      });
+      onLeaveBack: () => navbar.classList.remove('scrolled'),
+      fastScrollEnd: isIOS
     });
   }
 
   // ============================================
-  // NAVBAR SCROLLED STATE
+  // PAGE LOAD ANIMATIONS - OPTIMIZED
   // ============================================
-  const navbar = document.querySelector('.navbar');
-  if (navbar) {
-    ScrollTrigger.create({
-      start: 'top -40',
-      onEnter: () => navbar.classList.add('scrolled'),
-      onLeaveBack: () => navbar.classList.remove('scrolled')
-    });
-  }
-
-  // ============================================
-  // PAGE LOAD ANIMATIONS
-  // ============================================
-// ============================================
-  // PAGE LOAD ANIMATIONS - SEQUENTIAL REVEAL
-  // ============================================
-  const loadTimeline = gsap.timeline({ delay: 0.4 });
+  const loadTimeline = gsap.timeline({ delay: 0.2 });
 
   loadTimeline
-    // STEP 1: Logo appears elegantly (0.4s delay + 0.8s duration = completes at 1.2s)
     .to('.logo', {
       opacity: 1,
-      duration: 0.8,
+      duration: isIOS ? 0.5 : 0.8,
       ease: 'power2.out'
     })
-    // STEP 2: Nav links fade in sequentially (starts at 1.2s, completes ~2.0s)
     .to('.nav-links a', {
       opacity: 0.7,
-      duration: 0.6,
-      stagger: 0.1, // Each link staggers by 0.1s
+      duration: isIOS ? 0.4 : 0.6,
+      stagger: 0.1,
       ease: 'power2.out',
       onComplete: () => {
         document.querySelectorAll('.nav-links a').forEach(a => a.classList.add('loaded'));
       }
-    }, '+=0.0') // Start immediately after logo
-    // STEP 3: Hero title container fades in (starts at 2.0s)
+    }, '+=0.0')
     .to('.hero-title', {
       opacity: 1,
       y: 0,
-      duration: 0.6,
+      duration: isIOS ? 0.4 : 0.6,
       ease: 'power2.out'
-    }, '+=0.0') // Start immediately after nav
-    // STEP 4: Hero subtext container fades in (starts when title is 60% done = at 2.36s)
-    // The line-by-line animation will be triggered separately below
+    }, '+=0.0')
     .to('.subtext', {
       opacity: 1,
       y: 0,
-      duration: 0.5,
+      duration: isIOS ? 0.3 : 0.5,
       ease: 'power2.out'
-    }, '-=0.24') // Start at 60% of previous animation (0.6s * 0.4 = 0.24s remaining)
-    // STEP 5: CTA buttons pop in confidently (after subtext container fades)
+    }, '-=0.24')
     .to('.hero-ctas', {
       opacity: 1,
       y: 0,
-      duration: 0.8,
+      duration: isIOS ? 0.5 : 0.8,
       ease: 'power2.out'
-    }, '+=0.3'); // Add 0.3s gap for breathing room
+    }, '+=0.3');
 
-
-// ============================================
+  // ============================================
   // TEXT REVEAL ANIMATIONS - HERO
   // ============================================
   const heroTitle = document.querySelector('.hero-title.text-reveal');
-  if (heroTitle) {
+  if (heroTitle && performanceConfig.enableHeavyAnimations) {
     splitTextToChars(heroTitle);
-    // Character animation happens via CSS, triggered after container fades in
+  } else if (heroTitle) {
+    heroTitle.style.opacity = '1';
   }
 
   // ============================================
-  // TEXT SPLIT LINE ANIMATIONS - Initialize all elements
+  // TEXT SPLIT LINE ANIMATIONS - CONDITIONAL
   // ============================================
-
   
-// ============================================
-  // HERO SUBTEXT - Line-by-line reveal after title
-  // ============================================
-const subtext = document.querySelector('.subtext[data-split-text="true"]');
-  if (subtext) {
+  // Hero subtext
+  const subtext = document.querySelector('.subtext[data-split-text="true"]');
+  if (subtext && performanceConfig.enableHeavyAnimations) {
     document.fonts.ready.then(() => {
       splitIntoLines(subtext);
       const subtextLines = subtext.querySelectorAll('.line');
-      
-      // Wait for hero title character reveal to finish (~2.8s), then start
       setupLineAnimation(subtextLines, '.hero', 2.8);
     });
+  } else if (subtext) {
+    subtext.style.opacity = '1';
   }
   
-// ============================================
-  // ABOUT PARAGRAPHS - Line-by-line after title
-  // ============================================
-const aboutTexts = document.querySelectorAll('.about__text[data-split-text="true"]');
-  if (aboutTexts.length > 0) {
+  // About paragraphs
+  const aboutTexts = document.querySelectorAll('.about__text[data-split-text="true"]');
+  if (aboutTexts.length > 0 && performanceConfig.enableHeavyAnimations) {
     document.fonts.ready.then(() => {
       aboutTexts.forEach((text, index) => {
         splitIntoLines(text);
         const lines = text.querySelectorAll('.line');
-        
-        // Wait for about title to finish (~0.8s), then stagger paragraphs
         const paragraphDelay = 1.0 + (index * 0.6);
         setupLineAnimation(lines, '.about', paragraphDelay);
       });
     });
+  } else {
+    aboutTexts.forEach(text => text.style.opacity = '1');
   }
   
-// Dynamic character delay based on parent element
-    // About section gets slower reveal (0.05s), others use default (0.03s)
-
-  
-// ============================================
-  // PROCESS SUBTITLE - Line-by-line after title
-  // ============================================
-const processSubtitle = document.querySelector('.process__subtitle[data-split-text="true"]');
-  if (processSubtitle) {
+  // Process subtitle
+  const processSubtitle = document.querySelector('.process__subtitle[data-split-text="true"]');
+  if (processSubtitle && performanceConfig.enableHeavyAnimations) {
     document.fonts.ready.then(() => {
       splitIntoLines(processSubtitle);
       const lines = processSubtitle.querySelectorAll('.line');
-      
-      // Wait for process title to finish (~1.0s), then start
       setupLineAnimation(lines, '.process', 1.2);
     });
+  } else if (processSubtitle) {
+    processSubtitle.style.opacity = '1';
   }
 
-
-// ============================================
-  // WORK SUBTITLE - Line-by-line after title
-  // ============================================
-const workSubtitle = document.querySelector('.work-header__subtitle[data-split-text="true"]');
-  if (workSubtitle) {
+  // Work subtitle
+  const workSubtitle = document.querySelector('.work-header__subtitle[data-split-text="true"]');
+  if (workSubtitle && performanceConfig.enableHeavyAnimations) {
     document.fonts.ready.then(() => {
       splitIntoLines(workSubtitle);
       const lines = workSubtitle.querySelectorAll('.line');
-      
-      // Wait for work title to finish (~1.0s), then start
       setupLineAnimation(lines, '.work-section', 1.2);
     });
+  } else if (workSubtitle) {
+    workSubtitle.style.opacity = '1';
   }
   
-// ============================================
-  // CONTACT SUBTITLE - Line-by-line after title
-  // ============================================
-const contactSubtitle = document.querySelector('.contact-subtitle[data-split-text="true"]');
-  if (contactSubtitle) {
+  // Contact subtitle
+  const contactSubtitle = document.querySelector('.contact-subtitle[data-split-text="true"]');
+  if (contactSubtitle && performanceConfig.enableHeavyAnimations) {
     document.fonts.ready.then(() => {
       splitIntoLines(contactSubtitle);
       const lines = contactSubtitle.querySelectorAll('.line');
-      
-      // Wait for contact title to finish (~1.2s), then start
       setupLineAnimation(lines, '#contact', 1.4);
     });
+  } else if (contactSubtitle) {
+    contactSubtitle.style.opacity = '1';
   }
 
   // ============================================
-  // DARK MODE TRIGGERS - CONSOLIDATED
+  // DARK MODE TRIGGERS - OPTIMIZED
   // ============================================
   const aboutSection = document.querySelector('#about');
   const processSection = document.querySelector('#process');
@@ -481,7 +446,8 @@ const contactSubtitle = document.querySelector('.contact-subtitle[data-split-tex
       trigger: '#about',
       start: 'top 150px',
       onEnter: () => document.body.classList.add('dark-mode'),
-      onLeaveBack: () => document.body.classList.remove('dark-mode')
+      onLeaveBack: () => document.body.classList.remove('dark-mode'),
+      fastScrollEnd: isIOS
     });
   }
 
@@ -490,7 +456,8 @@ const contactSubtitle = document.querySelector('.contact-subtitle[data-split-tex
       trigger: '#process',
       start: 'top 150px',
       onEnter: () => document.body.classList.remove('dark-mode'),
-      onLeaveBack: () => document.body.classList.add('dark-mode')
+      onLeaveBack: () => document.body.classList.add('dark-mode'),
+      fastScrollEnd: isIOS
     });
   }
 
@@ -499,32 +466,37 @@ const contactSubtitle = document.querySelector('.contact-subtitle[data-split-tex
       trigger: '#contact',
       start: 'top 200px',
       onEnter: () => document.body.classList.add('dark-mode'),
-      onLeaveBack: () => document.body.classList.remove('dark-mode')
+      onLeaveBack: () => document.body.classList.remove('dark-mode'),
+      fastScrollEnd: isIOS
     });
   }
 
   // ============================================
-  // SECTION SCROLL ANIMATIONS
+  // SECTION SCROLL ANIMATIONS - OPTIMIZED
   // ============================================
   const aboutTitle = document.querySelector('.about__title');
   const aboutContent = document.querySelector('.about__content');
   
-if (aboutTitle) {
+  if (aboutTitle) {
     gsap.to('.about__title', {
       scrollTrigger: {
         trigger: '.about',
         start: 'top 70%',
+        fastScrollEnd: isIOS,
         onEnter: () => {
           const aboutTitleReveal = document.querySelector('.about__title.text-reveal');
-          if (aboutTitleReveal && !aboutTitleReveal.dataset.animated) {
+          if (aboutTitleReveal && !aboutTitleReveal.dataset.animated && performanceConfig.enableHeavyAnimations) {
             splitTextToChars(aboutTitleReveal);
+            aboutTitleReveal.dataset.animated = 'true';
+          } else if (aboutTitleReveal) {
+            aboutTitleReveal.style.opacity = '1';
             aboutTitleReveal.dataset.animated = 'true';
           }
         }
       },
       opacity: 1,
       y: 0,
-      duration: 0.8,
+      duration: isIOS ? 0.5 : 0.8,
       ease: 'power3.out'
     });
   }
@@ -533,72 +505,81 @@ if (aboutTitle) {
     gsap.to('.about__content', {
       scrollTrigger: {
         trigger: '.about',
-        start: 'top 65%'
+        start: 'top 65%',
+        fastScrollEnd: isIOS
       },
       opacity: 1,
       y: 0,
-      duration: 0.8,
+      duration: isIOS ? 0.5 : 0.8,
       delay: 0.1,
       ease: 'power3.out'
     });
   }
 
-const workHeader = document.querySelector('.work-header');
+  const workHeader = document.querySelector('.work-header');
   if (workHeader) {
     gsap.to('.work-header', {
       scrollTrigger: {
         trigger: '.work-section',
         start: 'top 70%',
+        fastScrollEnd: isIOS,
         onEnter: () => {
           const workTitleReveal = document.querySelector('.work-header__title.text-reveal');
-          if (workTitleReveal && !workTitleReveal.dataset.animated) {
+          if (workTitleReveal && !workTitleReveal.dataset.animated && performanceConfig.enableHeavyAnimations) {
             splitTextToChars(workTitleReveal);
+            workTitleReveal.dataset.animated = 'true';
+          } else if (workTitleReveal) {
+            workTitleReveal.style.opacity = '1';
             workTitleReveal.dataset.animated = 'true';
           }
         }
       },
       opacity: 1,
-      duration: 1.0, // INCREASED for impact
+      duration: isIOS ? 0.6 : 1.0,
       ease: 'power2.out'
     });
   }
 
-gsap.utils.toArray('.work-card').forEach((item, i) => {
+  gsap.utils.toArray('.work-card').forEach((item, i) => {
     gsap.to(item, {
       scrollTrigger: {
         trigger: item,
-        start: 'top 75%'
+        start: 'top 75%',
+        fastScrollEnd: isIOS
       },
       opacity: 1,
       y: 0,
-      duration: 0.8,
-      delay: 0.3 + (i * 0.1), // ADD 0.3s initial delay before cards start
+      duration: isIOS ? 0.5 : 0.8,
+      delay: 0.3 + (i * 0.1),
       ease: 'power2.out'
     });
   });
 
-const processHeader = document.querySelector('.process__header');
+  const processHeader = document.querySelector('.process__header');
   if (processHeader) {
     gsap.to('.process__header', {
       scrollTrigger: {
         trigger: '.process',
         start: 'top 60%',
+        fastScrollEnd: isIOS,
         onEnter: () => {
           const processTitles = document.querySelectorAll('.process__title.text-reveal');
           processTitles.forEach(title => {
-            if (!title.dataset.animated) {
+            if (!title.dataset.animated && performanceConfig.enableHeavyAnimations) {
               splitTextToChars(title);
+              title.dataset.animated = 'true';
+            } else if (!title.dataset.animated) {
+              title.style.opacity = '1';
               title.dataset.animated = 'true';
             }
           });
         }
       },
       opacity: 1,
-      duration: 1.0, // INCREASED
+      duration: isIOS ? 0.6 : 1.0,
       ease: 'power2.out'
     });
   }
-
 
   // ============================================
   // PROCESS STEP ANIMATION (DESKTOP)
@@ -631,18 +612,19 @@ const processHeader = document.querySelector('.process__header');
 
   if (window.innerWidth >= 1280 && steps.length > 0) {
     ScrollTrigger.create({
-    trigger: '.process__sticky-wrapper',
-    start: 'top top',
-    end: 'bottom bottom',
-    onUpdate: (self) => {
-      const progress = self.progress;
-      const total = steps.length - 1;
-      const newStep = Math.min(Math.round(progress * total), total);
-      updateProcessStep(newStep);
-    }
-  });
-}
-  // Add click handlers for process dots
+      trigger: '.process__sticky-wrapper',
+      start: 'top top',
+      end: 'bottom bottom',
+      fastScrollEnd: isIOS,
+      onUpdate: (self) => {
+        const progress = self.progress;
+        const total = steps.length - 1;
+        const newStep = Math.min(Math.round(progress * total), total);
+        updateProcessStep(newStep);
+      }
+    });
+  }
+
   dots.forEach((dot, i) => {
     dot.addEventListener('click', () => {
       updateProcessStep(i);
@@ -650,33 +632,33 @@ const processHeader = document.querySelector('.process__header');
   });
 
   // ============================================
-  // MOBILE PROCESS CAROUSEL
+  // MOBILE PROCESS CAROUSEL - OPTIMIZED FOR iOS
   // ============================================
   const mobileSteps = [
     {
       number: "01",
-      title: "Discovery & Research",
-      description: "We explore your vision, target audience, and competitive landscape to build a solid foundation for your project."
+      title: "Discovery Call",
+      description: "We'll talk about your business, what you need, and what success looks like. I'll tell you exactly what's possible, what it'll cost, and how long it'll take."
     },
     {
       number: "02",
-      title: "Strategy & Planning",
-      description: "We develop strategy including user journey mapping and content structure to ensure optimal results."
+      title: "Planning & Content",
+      description: "I'll map out your site structure and help you figure out what goes on each page. If you need guidance with content or images, I'll walk you through it."
     },
     {
       number: "03",
-      title: "Design & Prototyping",
-      description: "Your brand comes to life through mockups and interactive prototypes that capture your vision perfectly."
+      title: "Design",
+      description: "I'll design your site to look professional, clean, and trustworthy. You'll see exactly what it looks like before anything is built, and we'll refine it until you're happy."
     },
     {
       number: "04",
-      title: "Development & Build",
-      description: "I hand-code your site with performance and accessibility as top priorities for long-term success."
+      title: "Build & Test",
+      description: "I'll build your site to work fast, look great on all devices, and show up properly in search results. Everything gets tested to ensure it works smoothly."
     },
     {
       number: "05",
-      title: "Launch & Optimization",
-      description: "Your site launches optimized for search engines and user experience, ready to grow your business."
+      title: "Launch & Support",
+      description: "Your site goes live, and I'll show you how to make basic updates (or handle them for you). Ongoing support is available whenever you need it."
     }
   ];
 
@@ -689,7 +671,7 @@ const processHeader = document.querySelector('.process__header');
   const MIN_SWIPE = 80;
 
   function initMobileCarousel() {
-    if (window.innerWidth >= 1280) return; // Only on mobile
+    if (window.innerWidth >= 1280) return;
     
     renderMobileCards();
     renderMobileDots();
@@ -707,8 +689,10 @@ const processHeader = document.querySelector('.process__header');
       card.innerHTML = `
         <div class="mobile-card-inner">
           <div class="mobile-gradient-accent"></div>
-          <div class="mobile-card-decoration mobile-decoration-1"></div>
-          <div class="mobile-card-decoration mobile-decoration-2"></div>
+          ${performanceConfig.enable3DTransforms ? `
+            <div class="mobile-card-decoration mobile-decoration-1"></div>
+            <div class="mobile-card-decoration mobile-decoration-2"></div>
+          ` : ''}
           <div class="mobile-card-content">
             <div class="mobile-step-badge">
               <span class="mobile-step-number">${step.number}</span>
@@ -742,16 +726,18 @@ const processHeader = document.querySelector('.process__header');
     const container = document.getElementById('mobileCardsContainer');
     if (!container) return;
     
-    // Touch events
+    // Touch events with passive flags
     container.addEventListener('touchstart', handleMobileStart, { passive: true });
     container.addEventListener('touchmove', handleMobileMove, { passive: false });
     container.addEventListener('touchend', handleMobileEnd, { passive: true });
     
-    // Mouse events
-    container.addEventListener('mousedown', handleMobileStart);
-    container.addEventListener('mousemove', handleMobileMove);
-    container.addEventListener('mouseup', handleMobileEnd);
-    container.addEventListener('mouseleave', handleMobileEnd);
+    // Mouse events for desktop testing
+    if (!isMobile) {
+      container.addEventListener('mousedown', handleMobileStart);
+      container.addEventListener('mousemove', handleMobileMove);
+      container.addEventListener('mouseup', handleMobileEnd);
+      container.addEventListener('mouseleave', handleMobileEnd);
+    }
     
     // Navigation buttons
     const prevBtn = document.getElementById('mobilePrevBtn');
@@ -791,10 +777,8 @@ const processHeader = document.querySelector('.process__header');
     const diffX = Math.abs(mobileCurrentX - mobileStartX);
     const diffY = Math.abs(mobileCurrentY - mobileStartY);
     
-    // Determine if it's a horizontal or vertical swipe
     if (diffX > diffY && diffX > 10) {
-      // Horizontal swipe - handle card navigation
-      e.preventDefault(); // Prevent page scroll
+      e.preventDefault();
       
       const diff = mobileCurrentX - mobileStartX;
       const cards = document.querySelectorAll('.mobile-card');
@@ -802,13 +786,17 @@ const processHeader = document.querySelector('.process__header');
       
       cards.forEach((card, index) => {
         if (index === mobileCurrentStep) {
-          card.style.transform = `translateX(${dragProgress * 100}px) scale(${1 - Math.abs(dragProgress) * 0.1})`;
+          // Use 2D transforms on iOS for better performance
+          if (isIOS) {
+            card.style.transform = `translateX(${dragProgress * 100}px) scale(${1 - Math.abs(dragProgress) * 0.1})`;
+          } else {
+            card.style.transform = `translateX(${dragProgress * 100}px) scale(${1 - Math.abs(dragProgress) * 0.1})`;
+          }
           card.style.opacity = 1 - Math.abs(dragProgress) * 0.3;
         }
       });
     } else if (diffY > diffX && diffY > 10) {
-      // Vertical swipe - allow normal page scroll
-      mobileIsDragging = false; // Stop card dragging
+      mobileIsDragging = false;
       document.querySelectorAll('.mobile-card').forEach(card => {
         card.style.transform = '';
         card.style.opacity = '';
@@ -829,15 +817,13 @@ const processHeader = document.querySelector('.process__header');
       card.style.opacity = '';
     });
     
-    // Only change cards if it was a horizontal swipe
     if (diffXAbs > diffY) {
-      // Determine swipe direction
       if (diffX < -MIN_SWIPE && mobileCurrentStep < mobileSteps.length - 1) {
         goToMobileStep(mobileCurrentStep + 1);
       } else if (diffX > MIN_SWIPE && mobileCurrentStep > 0) {
         goToMobileStep(mobileCurrentStep - 1);
       } else {
-        updateMobileView(); // Snap back
+        updateMobileView();
       }
     }
     
@@ -869,397 +855,367 @@ const processHeader = document.querySelector('.process__header');
       } else if (diff === -1) {
         card.classList.add('prev');
       } else if (diff >= 2) {
-        card.classList.add('far-next');
-      } else if (diff <= -2) {
-        card.classList.add('far-prev');
-      } else {
-        card.classList.add('hidden');
-      }
-    });
-    
-    // Update dots
-    dots.forEach((dot, index) => {
-      dot.classList.toggle('active', index === mobileCurrentStep);
-    });
-    
-    // Update navigation buttons
-    const prevBtn = document.getElementById('mobilePrevBtn');
-    const nextBtn = document.getElementById('mobileNextBtn');
-    if (prevBtn) prevBtn.classList.toggle('disabled', mobileCurrentStep === 0);
-    if (nextBtn) nextBtn.classList.toggle('disabled', mobileCurrentStep === mobileSteps.length - 1);
+        card.classList.add('far-next');  } else if (diff <= -2) {
+    card.classList.add('far-prev');
+  } else {
+    card.classList.add('hidden');
   }
+});
 
-  // Initialize mobile carousel
-  initMobileCarousel();
+dots.forEach((dot, index) => {
+  dot.classList.toggle('active', index === mobileCurrentStep);
+});
 
-  // ============================================
-  // CONTACT & FOOTER ANIMATIONS
-  // ============================================
-  const contactContent = document.querySelector('.contact-content');
-  const contactFormWrapper = document.querySelector('.contact-form-wrapper');
-  const footer = document.querySelector('footer');
-
-if (contactContent) {
-    gsap.to('.contact-content', {
-      scrollTrigger: {
-        trigger: '#contact',
-        start: 'top 70%',
-        onEnter: () => {
-          const contactTitle = document.querySelector('#contact .text-reveal');
-          if (contactTitle && !contactTitle.dataset.animated) {
-            splitTextToChars(contactTitle);
-            contactTitle.dataset.animated = 'true';
-          }
-        }
-      },
-      opacity: 1,
-      duration: 1.2, // INCREASED for warmth
-      ease: 'power2.out'
-    });
-  }
-
-
-  if (contactFormWrapper) {
-    gsap.to('.contact-form-wrapper', {
-      scrollTrigger: {
-        trigger: '#contact',
-        start: 'top 65%'
-      },
-      opacity: 1,
-      duration: 1,
-      delay: 0.15,
-      ease: 'power3.out'
-    });
-  }
-
-  if (footer) {
-    gsap.to('footer', {
-      scrollTrigger: {
-        trigger: 'footer',
-        start: 'top 85%'
-      },
-      opacity: 1,
-      duration: 0.8,
-      ease: 'power3.out'
-    });
-  }
-
-  // ============================================
-  // PARALLAX SCROLLING
-  // ============================================
-  if (window.innerWidth >= 768) {
-    const heroTitle = document.querySelector('.hero-title');
-    const subtext = document.querySelector('.subtext');
-    
-    if (heroTitle) {
-      gsap.to('.hero-title', {
-        yPercent: -30,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '.hero',
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true,
-          invalidateOnRefresh: true
-        }
-      });
-    }
-
-    if (subtext) {
-      gsap.to('.subtext', {
-        yPercent: -50,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '.hero',
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true,
-          invalidateOnRefresh: true
-        }
-      });
-    }
-  }
-
-  // ============================================
-  // MOUSE-FOLLOW GRADIENT
-  // ============================================
-  if (window.innerWidth >= 1024 && !('ontouchstart' in window)) {
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    
-    const updateMousePosition = (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    };
-    
-    const animateGradient = () => {
-      document.documentElement.style.setProperty('--mouse-x', `${mouseX}px`);
-      document.documentElement.style.setProperty('--mouse-y', `${mouseY}px`);
-      requestAnimationFrame(animateGradient);
-    };
-    
-    document.addEventListener('mousemove', updateMousePosition, { passive: true });
-    animateGradient();
-    
-    setTimeout(() => {
-      document.body.classList.add('mouse-active');
-    }, 1000);
-    
-    const clickableElements = document.querySelectorAll('a, button, .browser-window, .process__dot, input, textarea, select');
-    clickableElements.forEach(el => {
-      el.addEventListener('mouseenter', () => {
-        document.body.classList.add('hovering-link');
-      }, { passive: true });
-      el.addEventListener('mouseleave', () => {
-        document.body.classList.remove('hovering-link');
-      }, { passive: true });
-    });
-  }
-
-  // ============================================
-  // CUSTOM CURSOR LOGIC FOR WORK CARDS
-  // ============================================
-  const cursor = document.getElementById('customCursor');
-  const cards = document.querySelectorAll('[data-cursor="true"]');
-
-  if (cursor && cards.length > 0 && window.innerWidth >= 1024) {
-    let mouseX = 0;
-    let mouseY = 0;
-    let cursorX = 0;
-    let cursorY = 0;
-    let isActive = false;
-    
-    const smoothing = 0.2;
-
-    document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      
-      if (isActive) {
-        cursor.style.display = 'flex';
-      }
-    }, { passive: true });
-
-    function animateCursor() {
-      if (isActive) {
-        cursorX += (mouseX - cursorX) * smoothing;
-        cursorY += (mouseY - cursorY) * smoothing;
-        
-        cursor.style.left = cursorX + 'px';
-        cursor.style.top = cursorY + 'px';
-      }
-      
-      requestAnimationFrame(animateCursor);
-    }
-    
-    animateCursor();
-
-    cards.forEach(card => {
-      card.addEventListener('mouseenter', () => {
-        isActive = true;
-        cursor.style.display = 'flex';
-        cursor.classList.add('active');
-        cursorX = mouseX;
-        cursorY = mouseY;
-      }, { passive: true });
-
-      card.addEventListener('mouseleave', () => {
-        isActive = false;
-        cursor.classList.remove('active');
-        setTimeout(() => {
-          if (!isActive) {
-            cursor.style.display = 'none';
-          }
-        }, 200);
-      }, { passive: true });
-    });
-
-    cursor.style.display = 'none';
-  }
-
-  // ============================================
-  // MAGNETIC CURSOR
-  // ============================================
-  class MagneticCursor {
-    constructor() {
-      this.magneticElements = document.querySelectorAll('.cta-btn, .btn-primary, .btn-secondary, .submit-btn');
-      this.isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      if (!this.isMobile && window.innerWidth >= 1024) this.init();
-    }
-    
-    init() {
-      this.magneticElements.forEach(el => {
-        el.addEventListener('mousemove', (e) => this.magnetize(e, el), { passive: true });
-        el.addEventListener('mouseleave', () => this.reset(el), { passive: true });
-      });
-    }
-    
-    magnetize(e, el) {
-      const rect = el.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      const deltaX = e.clientX - centerX;
-      const deltaY = e.clientY - centerY;
-      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-      
-      if (distance < 80) {
-        const strength = Math.min(distance / 80, 1);
-        const moveX = deltaX * 0.15 * strength;
-        const moveY = deltaY * 0.15 * strength;
-        
-        el.style.setProperty('--mag-x', `${moveX}px`);
-        el.style.setProperty('--mag-y', `${moveY}px`);
-      }
-    }
-    
-    reset(el) {
-      el.style.setProperty('--mag-x', '0px');
-      el.style.setProperty('--mag-y', '0px');
-    }
-  }
-
-  new MagneticCursor();
-
-  // ============================================
-  // RIPPLE EFFECT
-  // ============================================
-  function createRipple(event, element) {
-    const ripple = document.createElement('span');
-    const rect = element.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height);
-    const x = event.clientX - rect.left - size / 2;
-    const y = event.clientY - rect.top - size / 2;
-    
-    ripple.className = 'ripple';
-    ripple.style.width = ripple.style.height = size + 'px';
-    ripple.style.left = x + 'px';
-    ripple.style.top = y + 'px';
-    
-    element.appendChild(ripple);
-    
-    setTimeout(() => ripple.remove(), 600);
-  }
-
-  document.querySelectorAll('.cta-btn, .btn-primary, .btn-secondary, .submit-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      createRipple(e, this);
-    });
-  });
-
-  // ============================================
-  // TOUCH FEEDBACK
-  // ============================================
-  if ('ontouchstart' in window) {
-    const touchElements = document.querySelectorAll('.btn-primary, .btn-secondary, .cta-btn, .submit-btn, .nav-links a');
-    
-    touchElements.forEach(el => {
-      el.addEventListener('touchstart', function() {
-        this.style.transform = 'scale(0.98)';
-      }, { passive: true });
-      
-      el.addEventListener('touchend', function() {
-        setTimeout(() => {
-          this.style.transform = '';
-        }, 100);
-      }, { passive: true });
-    });
-  }
-
-  // ============================================
-  // FORM FUNCTIONALITY
-  // ============================================
-  // ============================================
-// FORM FUNCTIONALITY - FIXED FOR FORMSPREE
+const prevBtn = document.getElementById('mobilePrevBtn');
+const nextBtn = document.getElementById('mobileNextBtn');
+if (prevBtn) prevBtn.classList.toggle('disabled', mobileCurrentStep === 0);
+if (nextBtn) nextBtn.classList.toggle('disabled', mobileCurrentStep === mobileSteps.length - 1);
+}
+initMobileCarousel();
 // ============================================
-const form = document.getElementById('contactForm');
-
-if (form) {
-  const inputs = form.querySelectorAll('input, textarea');
-
-  // Floating label functionality
-  inputs.forEach(input => {
-    const label = input.previousElementSibling;
-    
-    if (label && input.value) {
-      label.classList.add('floating');
+// CONTACT & FOOTER ANIMATIONS
+// ============================================
+const contactContent = document.querySelector('.contact-content');
+const contactFormWrapper = document.querySelector('.contact-form-wrapper');
+const footer = document.querySelector('footer');
+if (contactContent) {
+gsap.to('.contact-content', {
+scrollTrigger: {
+trigger: '#contact',
+start: 'top 70%',
+fastScrollEnd: isIOS,
+onEnter: () => {
+const contactTitle = document.querySelector('#contact .text-reveal');
+if (contactTitle && !contactTitle.dataset.animated && performanceConfig.enableHeavyAnimations) {
+splitTextToChars(contactTitle);
+contactTitle.dataset.animated = 'true';
+} else if (contactTitle) {
+contactTitle.style.opacity = '1';
+contactTitle.dataset.animated = 'true';
+}
+}
+},
+opacity: 1,
+duration: isIOS ? 0.8 : 1.2,
+ease: 'power2.out'
+});
+}
+if (contactFormWrapper) {
+gsap.to('.contact-form-wrapper', {
+scrollTrigger: {
+trigger: '#contact',
+start: 'top 65%',
+fastScrollEnd: isIOS
+},
+opacity: 1,
+duration: isIOS ? 0.6 : 1,
+delay: 0.15,
+ease: 'power3.out'
+});
+}
+if (footer) {
+gsap.to('footer', {
+scrollTrigger: {
+trigger: 'footer',
+start: 'top 85%',
+fastScrollEnd: isIOS
+},
+opacity: 1,
+duration: isIOS ? 0.5 : 0.8,
+ease: 'power3.out'
+});
+}
+// ============================================
+// PARALLAX SCROLLING - DISABLED ON iOS
+// ============================================
+if (window.innerWidth >= 768 && performanceConfig.enableHeavyAnimations) {
+const heroTitle = document.querySelector('.hero-title');
+const subtext = document.querySelector('.subtext');
+if (heroTitle) {
+  gsap.to('.hero-title', {
+    yPercent: -30,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '.hero',
+      start: 'top top',
+      end: 'bottom top',
+      scrub: true,
+      invalidateOnRefresh: true
     }
-    
-    input.addEventListener('focus', () => {
-      if (label) label.classList.add('floating');
-    });
-    
-    input.addEventListener('blur', () => {
-      if (label && !input.value) {
-        label.classList.remove('floating');
-      }
-    });
-  });
-
-  // Form submit handler - REMOVED e.preventDefault()
-  form.addEventListener('submit', (e) => {
-    const btn = form.querySelector('.submit-btn');
-    if (!btn) return;
-    
-    // Just show loading state, let Formspree handle the actual submission
-    btn.disabled = true;
-    btn.textContent = 'Sending...';
-    
-    // Note: The form will now submit to Formspree naturally
-    // Formspree will redirect to their confirmation page or your custom page
   });
 }
-  // ============================================
-  // SMOOTH SCROLL
-  // ============================================
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', (e) => {
-      e.preventDefault();
-      const targetId = anchor.getAttribute('href');
-      const target = document.querySelector(targetId);
-      if (target) {
-        target.scrollIntoView({
-          behavior: 'smooth'
-        });
-      }
-    });
+
+if (subtext) {
+  gsap.to('.subtext', {
+    yPercent: -50,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '.hero',
+      start: 'top top',
+      end: 'bottom top',
+      scrub: true,
+      invalidateOnRefresh: true
+    }
   });
+}
+}
+// ============================================
+// MOUSE-FOLLOW GRADIENT - DESKTOP ONLY
+// ============================================
+if (performanceConfig.enableMouseGradient) {
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+let currentX = mouseX;
+let currentY = mouseY;
+const updateMousePosition = (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+};
 
+const animateGradient = () => {
+  // Smooth interpolation
+  currentX += (mouseX - currentX) * 0.1;
+  currentY += (mouseY - currentY) * 0.1;
+  
+  document.documentElement.style.setProperty('--mouse-x', `${currentX}px`);
+  document.documentElement.style.setProperty('--mouse-y', `${currentY}px`);
+  requestAnimationFrame(animateGradient);
+};
 
- // Reinitialize split text on resize
-      document.querySelectorAll('[data-split-text="true"]').forEach(el => {
-        if (el.dataset.splitProcessed) {
-          const originalText = el.dataset.originalText;
-          el.innerHTML = originalText;
-          el.dataset.splitProcessed = '';
-          
-          // Kill old ScrollTriggers for this element
-          ScrollTrigger.getAll().forEach(trigger => {
-            if (trigger.vars.trigger === el.closest('section')) {
-              trigger.kill();
-            }
-          });
-          
-          splitIntoLines(el);
-        }
-      });
+document.addEventListener('mousemove', updateMousePosition, { passive: true });
+animateGradient();
 
-  // ============================================
-  // SCROLL TRIGGER REFRESH ON RESIZE
-  // ============================================
-  let resizeTimeout;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-      ScrollTrigger.refresh();
-      
-      // Reinitialize mobile carousel on orientation change
-      if (window.innerWidth < 1280) {
-        const mobileContainer = document.getElementById('mobileCardsContainer');
-        if (mobileContainer && mobileContainer.children.length === 0) {
-          initMobileCarousel();
-        }
-      }
-    }, 250);
+setTimeout(() => {
+  document.body.classList.add('mouse-active');
+}, 1000);
+
+const clickableElements = document.querySelectorAll('a, button, .browser-window, .process__dot, input, textarea, select');
+clickableElements.forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    document.body.classList.add('hovering-link');
+  }, { passive: true });
+  el.addEventListener('mouseleave', () => {
+    document.body.classList.remove('hovering-link');
+  }, { passive: true });
+});
+}
+// ============================================
+// CUSTOM CURSOR - DESKTOP ONLY
+// ============================================
+const cursor = document.getElementById('customCursor');
+const cards = document.querySelectorAll('[data-cursor="true"]');
+if (cursor && cards.length > 0 && window.innerWidth >= 1024 && !isMobile) {
+let mouseX = 0;
+let mouseY = 0;
+let cursorX = 0;
+let cursorY = 0;
+let isActive = false;
+const smoothing = 0.2;
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  
+  if (isActive) {
+    cursor.style.display = 'flex';
+  }
+}, { passive: true });
+
+function animateCursor() {
+  if (isActive) {
+    cursorX += (mouseX - cursorX) * smoothing;
+    cursorY += (mouseY - cursorY) * smoothing;
+    
+    cursor.style.left = cursorX + 'px';
+    cursor.style.top = cursorY + 'px';
+  }
+  
+  requestAnimationFrame(animateCursor);
+}
+
+animateCursor();
+
+cards.forEach(card => {
+  card.addEventListener('mouseenter', () => {
+    isActive = true;
+    cursor.style.display = 'flex';
+    cursor.classList.add('active');
+    cursorX = mouseX;
+    cursorY = mouseY;
   }, { passive: true });
 
+  card.addEventListener('mouseleave', () => {
+    isActive = false;
+    cursor.classList.remove('active');
+    setTimeout(() => {
+      if (!isActive) {
+        cursor.style.display = 'none';
+      }
+    }, 200);
+  }, { passive: true });
+});
+
+cursor.style.display = 'none';
+}
+// ============================================
+// MAGNETIC CURSOR - DESKTOP ONLY
+// ============================================
+class MagneticCursor {
+constructor() {
+this.magneticElements = document.querySelectorAll('.cta-btn, .btn-primary, .btn-secondary, .submit-btn');
+this.isMobile = isMobile;
+if (!this.isMobile && window.innerWidth >= 1024) this.init();
+}
+init() {
+  this.magneticElements.forEach(el => {
+    el.addEventListener('mousemove', (e) => this.magnetize(e, el), { passive: true });
+    el.addEventListener('mouseleave', () => this.reset(el), { passive: true });
+  });
+}
+
+magnetize(e, el) {
+  const rect = el.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  const deltaX = e.clientX - centerX;
+  const deltaY = e.clientY - centerY;
+  const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+  
+  if (distance < 80) {
+    const strength = Math.min(distance / 80, 1);
+    const moveX = deltaX * 0.15 * strength;
+    const moveY = deltaY * 0.15 * strength;
+    
+    el.style.setProperty('--mag-x', `${moveX}px`);
+    el.style.setProperty('--mag-y', `${moveY}px`);
+  }
+}
+
+reset(el) {
+  el.style.setProperty('--mag-x', '0px');
+  el.style.setProperty('--mag-y', '0px');
+}
+}
+if (!isMobile) {
+new MagneticCursor();
+}
+// ============================================
+// RIPPLE EFFECT
+// ============================================
+function createRipple(event, element) {
+const ripple = document.createElement('span');
+const rect = element.getBoundingClientRect();
+const size = Math.max(rect.width, rect.height);
+const x = event.clientX - rect.left - size / 2;
+const y = event.clientY - rect.top - size / 2;
+ripple.className = 'ripple';
+ripple.style.width = ripple.style.height = size + 'px';
+ripple.style.left = x + 'px';
+ripple.style.top = y + 'px';
+
+element.appendChild(ripple);
+
+setTimeout(() => ripple.remove(), 600);
+}
+document.querySelectorAll('.cta-btn, .btn-primary, .btn-secondary, .submit-btn').forEach(btn => {
+btn.addEventListener('click', function(e) {
+createRipple(e, this);
+});
+});
+// ============================================
+// TOUCH FEEDBACK
+// ============================================
+if ('ontouchstart' in window) {
+const touchElements = document.querySelectorAll('.btn-primary, .btn-secondary, .cta-btn, .submit-btn, .nav-links a');
+touchElements.forEach(el => {
+  el.addEventListener('touchstart', function() {
+    this.style.transform = 'scale(0.98)';
+  }, { passive: true });
+  
+  el.addEventListener('touchend', function() {
+    setTimeout(() => {
+      this.style.transform = '';
+    }, 100);
+  }, { passive: true });
+});
+}
+// ============================================
+// FORM FUNCTIONALITY
+// ============================================
+const form = document.getElementById('contactForm');
+if (form) {
+const inputs = form.querySelectorAll('input, textarea');
+inputs.forEach(input => {
+  const label = input.previousElementSibling;
+  
+  if (label && input.value) {
+    label.classList.add('floating');
+  }
+  
+  input.addEventListener('focus', () => {
+    if (label) label.classList.add('floating');
+  });
+  
+  input.addEventListener('blur', () => {
+    if (label && !input.value) {
+      label.classList.remove('floating');
+    }
+  });
+});
+
+form.addEventListener('submit', (e) => {
+  const btn = form.querySelector('.submit-btn');
+  if (!btn) return;
+  
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+});
+}
+// ============================================
+// OPTIMIZED RESIZE HANDLER
+// ============================================
+const handleResize = debounce(() => {
+// Only refresh ScrollTrigger, don't recalculate text splits on iOS
+ScrollTrigger.refresh();
+// Reinitialize mobile carousel on orientation change
+if (window.innerWidth < 1280) {
+  const mobileContainer = document.getElementById('mobileCardsContainer');
+  if (mobileContainer && mobileContainer.children.length === 0) {
+    initMobileCarousel();
+  }
+}
+}, isIOS ? 500 : 250);
+window.addEventListener('resize', handleResize, { passive: true });
+// ============================================
+// iOS SPECIFIC OPTIMIZATIONS
+// ============================================
+if (isIOS) {
+// Add iOS class to body for CSS targeting
+document.body.classList.add('is-ios');
+// Prevent rubber band scrolling
+document.body.addEventListener('touchmove', function(e) {
+  if (e.target.closest('.mobile-menu-overlay')) {
+    return;
+  }
+}, { passive: true });
+
+// Force GPU acceleration on key elements
+const gpuElements = document.querySelectorAll('.hero-title, .mobile-card, .work-card, .process__step');
+gpuElements.forEach(el => {
+  el.style.transform = 'translate3d(0, 0, 0)';
+  el.style.willChange = 'auto'; // Let browser decide
+});
+}
+// ============================================
+// PERFORMANCE MONITORING (OPTIONAL)
+// ============================================
+if (window.location.search.includes('debug=true')) {
+console.log('Performance Config:', performanceConfig);
+console.log('Device Info:', {
+isIOS,
+isMobile,
+prefersReducedMotion,
+userAgent: navigator.userAgent
+});
+}
 });
