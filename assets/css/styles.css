@@ -2777,3 +2777,245 @@ body.dark-mode .footer-legal span {
 .custom-cursor.active {
   display: flex;
 }
+
+
+/* ============================================ */
+/* iOS PERFORMANCE OPTIMIZATIONS */
+/* ============================================ */
+
+/* iOS-specific class for targeting */
+body.is-ios {
+  /* Force hardware acceleration */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* Reduce backdrop-filter on iOS */
+body.is-ios .navbar,
+body.is-ios .mobile-card-inner,
+body.is-ios .process__step,
+body.is-ios .mobile-nav-arrow,
+body.is-ios .mobile-progress-dots {
+  backdrop-filter: blur(8px) !important; /* Reduced from 20-30px */
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+body.is-ios .mobile-menu-overlay {
+  backdrop-filter: blur(15px) !important; /* Reduced from 40px */
+  -webkit-backdrop-filter: blur(15px) !important;
+}
+
+/* Disable 3D transforms on iOS */
+body.is-ios .mobile-card {
+  transform-style: flat !important;
+}
+
+body.is-ios .mobile-cards-viewport {
+  perspective: none !important;
+}
+
+/* Simplified transforms for iOS mobile cards */
+body.is-ios .mobile-card.active {
+  transform: translateX(0) scale(1) !important;
+}
+
+body.is-ios .mobile-card.next {
+  transform: translateX(100%) scale(0.9) !important;
+}
+
+body.is-ios .mobile-card.prev {
+  transform: translateX(-100%) scale(0.9) !important;
+}
+
+body.is-ios .mobile-card.far-next,
+body.is-ios .mobile-card.far-prev,
+body.is-ios .mobile-card.hidden {
+  transform: translateX(200%) scale(0.7) !important;
+}
+
+/* Faster transitions on iOS */
+body.is-ios .mobile-card {
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important; /* Faster easing */
+}
+
+/* Reduce animation complexity on iOS */
+body.is-ios .text-reveal .char {
+  animation-duration: 0.5s !important; /* Faster from 0.8s */
+}
+
+/* Disable parallax on iOS */
+body.is-ios .hero-title,
+body.is-ios .subtext {
+  transform: none !important;
+}
+
+/* Optimize work card hover on iOS */
+body.is-ios .work-card:hover {
+  transform: translateY(-5px) !important; /* Reduced from -10px */
+}
+
+body.is-ios .browser-viewport img {
+  transition: transform 0.3s ease !important; /* Faster from 0.5s */
+}
+
+/* Remove blur filters on iOS for performance */
+body.is-ios .process__step.prev,
+body.is-ios .process__step.next {
+  filter: none !important;
+  opacity: 0.25 !important;
+}
+
+/* Optimize mobile decorations on iOS */
+body.is-ios .mobile-card-decoration {
+  filter: blur(40px) !important; /* Reduced from 60px */
+  opacity: 0.1 !important;
+}
+
+/* Disable mouse gradient on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  body::before {
+    display: none !important;
+  }
+}
+
+/* Smooth scrolling for iOS native scroll */
+body.is-ios {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Prevent iOS zoom on input focus */
+body.is-ios input,
+body.is-ios textarea,
+body.is-ios select {
+  font-size: 16px !important; /* Prevents iOS zoom */
+}
+
+/* GPU acceleration hints for key elements */
+body.is-ios .hero-title,
+body.is-ios .mobile-card,
+body.is-ios .work-card,
+body.is-ios .process__step,
+body.is-ios .navbar {
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000px;
+  perspective: 1000px;
+}
+
+/* Optimize will-change usage - only on interaction */
+body.is-ios .mobile-card.active {
+  will-change: transform, opacity;
+}
+
+body.is-ios .mobile-card:not(.active) {
+  will-change: auto;
+}
+
+/* Disable filters that cause repaints on iOS */
+body.is-ios .mobile-gradient-accent {
+  opacity: 0.03 !important; /* Reduced from 0.05 */
+}
+
+/* Simplify box shadows on iOS */
+body.is-ios .browser-window {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6) !important; /* Simpler shadow */
+}
+
+body.is-ios .mobile-card-inner {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important; /* Reduced complexity */
+}
+
+/* Optimize navbar on iOS */
+body.is-ios .navbar {
+  transition: all 0.2s ease !important; /* Faster from 0.3s */
+}
+
+/* Reduce motion for text animations on iOS */
+@media (hover: none) and (pointer: coarse) {
+  .line-inner {
+    transition: transform 0.6s ease-out !important; /* Simplified easing */
+  }
+}
+
+/* Optimize form interactions on iOS */
+body.is-ios .form-group input:focus,
+body.is-ios .form-group textarea:focus {
+  box-shadow: 0 2px 12px rgba(0, 65, 168, 0.12) !important; /* Lighter shadow */
+}
+
+/* Prevent webkit tap highlight */
+body.is-ios * {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Optimize button transforms on iOS */
+body.is-ios .btn-primary:hover,
+body.is-ios .btn-secondary:hover,
+body.is-ios .submit-btn:hover {
+  transform: translateY(-2px) !important; /* Reduced from -3px */
+}
+
+/* Simplify footer animations on iOS */
+body.is-ios .footer-contact-item:hover {
+  transform: translateX(2px) !important; /* Reduced from 4px */
+}
+
+/* Disable complex animations on low-power mode (iOS 9+) */
+@media (prefers-reduced-motion: reduce) {
+  body.is-ios * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Fix iOS Safari viewport height issues */
+body.is-ios .hero {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+body.is-ios .mobile-menu-overlay {
+  height: 100vh;
+  height: -webkit-fill-available;
+}
+
+/* Optimize z-index stacking on iOS */
+body.is-ios .navbar {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  z-index: 1000;
+}
+
+/* Prevent iOS Safari bounce on process carousel */
+body.is-ios .mobile-cards-viewport {
+  overflow: hidden;
+  -webkit-overflow-scrolling: auto;
+}
+
+/* Lighter gradients on iOS */
+body.is-ios .gradient-1,
+body.is-ios .gradient-2 {
+  background-size: 150% 150%; /* Smaller gradient area */
+}
+
+/* Optional: Disable backdrop-filter entirely for maximum performance */
+/* Uncomment if you still experience issues */
+/*
+body.is-ios .navbar,
+body.is-ios .mobile-card-inner,
+body.is-ios .process__step {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+body.is-ios.dark-mode .navbar,
+body.is-ios.dark-mode .mobile-card-inner,
+body.is-ios.dark-mode .process__step {
+  background: rgba(10, 10, 10, 0.95) !important;
+}
+*/
+
